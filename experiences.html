@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore India - Unforgettable Experiences</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        /* Custom styles if needed */
+        body {
+            font-family: 'Inter', sans-serif; /* Example font */
+        }
+        .hero-bg {
+            background-image: url('https://via.placeholder.com/1500x600/cccccc/888888?text=Hero+Background+Image'); /* Placeholder */
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-orange-500">ExploreIndia</div>
+            <div>
+                <!-- Add nav links here if needed -->
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-bg h-[500px] flex items-center text-white relative">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+            <div class="container mx-auto px-6 relative z-10 text-center" data-aos="fade-in" data-aos-duration="1000">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Unforgettable Indian Experiences</h1>
+                <p class="text-lg md:text-xl mb-8">Discover the culture, thrilling adventures, and scenic beauty of India.</p>
+                <button id="exploreExperiencesBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300">
+                    Explore Experiences
+                </button>
+            </div>
+        </section>
+
+        <!-- Filter Buttons -->
+        <section id="experienceFiltersSection" class="py-8 bg-white border-b">
+            <div id="filterBtnContainer" class="container mx-auto px-6 flex flex-wrap justify-center gap-3">
+                <button class="filter-btn bg-orange-500 text-white py-2 px-5 rounded-full text-sm font-medium" data-filter="all">All Experiences</button>
+                <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300" data-filter="adventure">Adventure</button>
+                <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300" data-filter="culture">Culture & Arts</button>
+                <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300" data-filter="food">Food & Drink</button>
+                <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300" data-filter="wellness">Wellness</button>
+                <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300" data-filter="virtual">Virtual</button> 
+            </div>
+        </section>
+
+        <!-- Adventure Experiences -->
+        <section class="experience-section py-16" data-category="adventure">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-2">Adventure Experiences</h2>
+                <p class="text-center text-gray-600 mb-10">Thrilling adventures amidst India's diverse landscapes.</p>
+
+                <!-- Featured Card -->
+                <div class="bg-gradient-to-r from-gray-700 to-gray-900 text-white p-8 md:p-12 rounded-lg shadow-lg mb-12 flex flex-col md:flex-row items-center" data-aos="fade-up">
+                    <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+                        <span class="text-sm uppercase tracking-widest text-orange-400">Featured Adventure</span>
+                        <h3 class="text-3xl font-bold mt-2 mb-4">Epic Himalayan Treks</h3>
+                        <p class="text-gray-300 mb-6">Embark on a journey through breathtaking mountain passes and witness stunning panoramic views.</p>
+                        <button id="browseTreksBtn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-2 px-6 rounded-full transition duration-300">
+                            Browse Treks
+                        </button>
+                    </div>
+                    <div class="md:w-1/2 h-64 rounded-lg overflow-hidden">
+                         <img src="https://i.ibb.co/5WFkLXw1/e03f2788-647a-4a93-8e57-d0b46fae6331-Why-Does-Rupin-Pass-Attract-So-Many-Trekkers.webp" alt="Himalayan Treks" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Grid of Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Trek+Package" alt="Guided Treks" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Guided Trek Packages</h4>
+                            <p class="text-gray-600 text-sm mb-4">Explore the best trails with our experienced guides and all-inclusive packages.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Trekking</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Guided Trek Package"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Trek+Package"
+                                   data-experience-price="60000"
+                                   data-experience-type="Adventure">Book Now &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Outdoor+Thrills" alt="Outdoor Thrills" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Outdoor Thrills</h4>
+                            <p class="text-gray-600 text-sm mb-4">Experience adrenaline-pumping activities like zip-lining and rock climbing.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Adventure</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Outdoor Thrills Package"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Outdoor+Thrills"
+                                   data-experience-price="15000"
+                                   data-experience-type="Adventure">Book Now &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=River+Rafting" alt="River Rafting" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">River Rafting</h4>
+                            <p class="text-gray-600 text-sm mb-4">Navigate the rapids of India's mighty rivers for an unforgettable experience.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Water Sports</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="River Rafting Expedition"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=River+Rafting"
+                                   data-experience-price="8000"
+                                   data-experience-type="Adventure">Book Now &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cultural Experiences -->
+         <section class="experience-section py-16 bg-gray-100" data-category="culture">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-2">Cultural Experiences</h2>
+                <p class="text-center text-gray-600 mb-10">Immerse yourself in India's rich heritage and traditions.</p>
+
+                 <!-- Featured Card -->
+                <div class="bg-gradient-to-r from-purple-700 to-indigo-900 text-white p-8 md:p-12 rounded-lg shadow-lg mb-12 flex flex-col md:flex-row items-center" data-aos="fade-up">
+                     <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+                        <span class="text-sm uppercase tracking-widest text-orange-300">Featured Culture</span>
+                        <h3 class="text-3xl font-bold mt-2 mb-4">Vibrant Culture & Arts</h3>
+                        <p class="text-gray-300 mb-6">Discover ancient traditions, classical performances, and intricate crafts.</p>
+                        <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300 open-details-modal-btn"
+                                data-experience-name="Featured Culture & Arts Immersion"
+                                data-experience-image="https://via.placeholder.com/600x400/cccccc/888888?text=Culture+Arts"
+                                data-experience-price="12000"
+                                data-experience-type="Cultural Feature">Explore Heritage</button>
+                    </div>
+                    <div class="md:w-1/2 h-64 rounded-lg overflow-hidden">
+                         <img src="https://via.placeholder.com/600x400/cccccc/888888?text=Culture+Arts" alt="Culture & Arts" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Grid of Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Dance+Workshop" alt="Dance Workshop" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Classical Dance Workshops</h4>
+                            <p class="text-gray-600 text-sm mb-4">Learn the basics of traditional Indian dance forms from masters.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Workshop</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Classical Dance Workshop"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Dance+Workshop"
+                                   data-experience-price="2500"
+                                   data-experience-type="Workshop">Book Workshop &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Craft+Workshop" alt="Craft Workshop" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Traditional Craft Workshops</h4>
+                            <p class="text-gray-600 text-sm mb-4">Try your hand at ancient crafting techniques like pottery or weaving.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Crafts</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Traditional Craft Workshop"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Craft+Workshop"
+                                   data-experience-price="3000"
+                                   data-experience-type="Workshop">Book Workshop &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Temple+Tour" alt="Temple Tour" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Temple Heritage Tours</h4>
+                            <p class="text-gray-600 text-sm mb-4">Explore ancient temples & learn about their history and significance.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Heritage</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Temple Heritage Tour"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Temple+Tour"
+                                   data-experience-price="4500"
+                                   data-experience-type="Tour">Book Tour &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Food & Culinary Experiences -->
+        <section class="experience-section py-16" data-category="food">
+             <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-2">Food & Culinary Experiences</h2>
+                <p class="text-center text-gray-600 mb-10">Taste the diverse and flavorful cuisines of India.</p>
+
+                 <!-- Featured Card -->
+                <div class="bg-gradient-to-r from-green-700 to-teal-900 text-white p-8 md:p-12 rounded-lg shadow-lg mb-12 flex flex-col md:flex-row items-center" data-aos="fade-up">
+                     <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+                        <span class="text-sm uppercase tracking-widest text-yellow-300">Featured Food</span>
+                        <h3 class="text-3xl font-bold mt-2 mb-4">A Culinary Adventure</h3>
+                        <p class="text-gray-300 mb-6">Embark on a taste journey through Indian regional cuisines and street food delights.</p>
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300 open-details-modal-btn"
+                                data-experience-name="Featured Culinary Adventure"
+                                data-experience-image="https://via.placeholder.com/600x400/cccccc/888888?text=Culinary+Adventure"
+                                data-experience-price="9500"
+                                data-experience-type="Food Feature">Discover Flavors</button>
+                    </div>
+                     <div class="md:w-1/2 h-64 rounded-lg overflow-hidden">
+                         <img src="https://via.placeholder.com/600x400/cccccc/888888?text=Culinary+Adventure" alt="Culinary Adventure" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Grid of Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                     <!-- Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Cooking+Class" alt="Cooking Class" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Cooking Classes</h4>
+                            <p class="text-gray-600 text-sm mb-4">Learn to cook authentic Indian dishes with local chefs and home cooks.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Food</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Authentic Indian Cooking Class"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Cooking+Class"
+                                   data-experience-price="3500"
+                                   data-experience-type="Class">Book Class &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Card 2 -->
+                     <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Street+Food+Tour" alt="Street Food Tour" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Street Food Tours</h4>
+                            <p class="text-gray-600 text-sm mb-4">Explore bustling markets and taste the best local street food delicacies.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Street Food</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="City Street Food Tour"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Street+Food+Tour"
+                                   data-experience-price="2000"
+                                   data-experience-type="Tour">Book Tour &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Card 3 -->
+                     <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Spice+Plantation" alt="Spice Plantation" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Spice Plantation Visit</h4>
+                            <p class="text-gray-600 text-sm mb-4">Discover the source of India's famed spices and learn about their uses.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Agri-tourism</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Spice Plantation Visit"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Spice+Plantation"
+                                   data-experience-price="1500"
+                                   data-experience-type="Visit">Book Visit &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- Wellness Experiences -->
+         <section class="experience-section py-16 bg-gray-100" data-category="wellness">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-2">Wellness Experiences</h2>
+                <p class="text-center text-gray-600 mb-10">Rejuvenate your mind, body, and spirit.</p>
+
+                <!-- Featured Card -->
+                <div class="bg-gradient-to-r from-blue-700 to-cyan-900 text-white p-8 md:p-12 rounded-lg shadow-lg mb-12 flex flex-col md:flex-row items-center" data-aos="fade-up">
+                     <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+                        <span class="text-sm uppercase tracking-widest text-cyan-300">Featured Wellness</span>
+                        <h3 class="text-3xl font-bold mt-2 mb-4">Authentic Ayurvedic Healing</h3>
+                        <p class="text-gray-300 mb-6">Experience traditional Ayurvedic treatments to restore balance and health.</p>
+                        <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300 open-details-modal-btn"
+                                data-experience-name="Featured Ayurvedic Retreat"
+                                data-experience-image="https://via.placeholder.com/600x400/cccccc/888888?text=Ayurvedic+Healing"
+                                data-experience-price="75000"
+                                data-experience-type="Wellness Feature">Book Retreats</button>
+                    </div>
+                    <div class="md:w-1/2 h-64 rounded-lg overflow-hidden">
+                         <img src="https://via.placeholder.com/600x400/cccccc/888888?text=Ayurvedic+Healing" alt="Ayurvedic Healing" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Grid of Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Yoga+Retreat" alt="Yoga Retreat" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Yoga Retreats</h4>
+                            <p class="text-gray-600 text-sm mb-4">Deepen your practice in serene locations with experienced yoga gurus.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Wellness</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Serene Yoga Retreat"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Yoga+Retreat"
+                                   data-experience-price="40000"
+                                   data-experience-type="Retreat">Book Retreat &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Meditation+Retreat" alt="Meditation Retreat" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Meditation Retreats</h4>
+                            <p class="text-gray-600 text-sm mb-4">Find inner peace and clarity through guided meditation sessions.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Mindfulness</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Guided Meditation Retreat"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Meditation+Retreat"
+                                   data-experience-price="30000"
+                                   data-experience-type="Retreat">Book Retreat &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                        <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Holistic+Healing" alt="Holistic Healing" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Holistic Healing</h4>
+                            <p class="text-gray-600 text-sm mb-4">Explore alternative therapies like spa treatments and naturopathy.</p>
+                             <div class="flex justify-between items-center">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Therapy</span>
+                                <a href="#" class="open-details-modal-btn text-orange-500 hover:text-orange-700 font-semibold text-sm"
+                                   data-experience-name="Holistic Healing Session"
+                                   data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Holistic+Healing"
+                                   data-experience-price="5000"
+                                   data-experience-type="Session">Book Session &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Immersive Virtual Experiences -->
+         <section class="experience-section py-16" data-category="virtual">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-2">Immersive Virtual Experiences</h2>
+                <p class="text-center text-gray-600 mb-10">Transport yourself to India's wonders through our interactive virtual tours.</p>
+
+                 <!-- Filter Buttons -->
+                <div class="flex flex-wrap justify-center gap-3 mb-10">
+                    <button class="filter-btn bg-orange-500 text-white py-2 px-5 rounded-full text-sm font-medium">All</button>
+                    <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300">Adventure</button>
+                    <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300">Culture</button>
+                    <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300">Food</button>
+                    <button class="filter-btn bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-5 rounded-full text-sm font-medium transition duration-300">Wellness</button>
+                </div>
+
+                <!-- Grid of Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
+                     <!-- Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Crafting" alt="Virtual Crafting" class="w-full h-48 object-cover">
+                            <button class="absolute top-3 right-3 bg-red-500 text-white rounded-full p-2 shadow-md hover:bg-red-600 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>
+                            </button>
+                         </div>
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Mind Crafting Adventures</h4>
+                            <p class="text-gray-600 text-sm mb-4">Engage in virtual crafting workshops from the comfort of your home.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Virtual</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Crafts</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Adventure</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Skills</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full text-sm transition duration-300 open-details-modal-btn"
+                                        data-experience-name="Virtual Mind Crafting Adventure"
+                                        data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Crafting"
+                                        data-experience-price="1000"
+                                        data-experience-type="Virtual">Start Virtual Tour</button>
+                                <a href="#" class="text-orange-500 hover:text-orange-700 font-semibold text-sm">View Details &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Card 2 -->
+                     <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                         <div class="relative">
+                            <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Culture" alt="Virtual Culture" class="w-full h-48 object-cover">
+                             <button class="absolute top-3 right-3 bg-red-500 text-white rounded-full p-2 shadow-md hover:bg-red-600 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Culture & Arts</h4>
+                             <p class="text-gray-600 text-sm mb-4">Virtually walk through museums and attend classical music concerts.</p>
+                             <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Culture</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Arts</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">History</span>
+                             </div>
+                            <div class="flex justify-between items-center">
+                                <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full text-sm transition duration-300 open-details-modal-btn"
+                                        data-experience-name="Virtual Culture & Arts Tour"
+                                        data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Culture"
+                                        data-experience-price="800"
+                                        data-experience-type="Virtual">Start Virtual Tour</button>
+                                <a href="#" class="text-orange-500 hover:text-orange-700 font-semibold text-sm">View Details &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                     <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Food" alt="Virtual Food" class="w-full h-48 object-cover">
+                             <button class="absolute top-3 right-3 bg-red-500 text-white rounded-full p-2 shadow-md hover:bg-red-600 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Food & Drink</h4>
+                            <p class="text-gray-600 text-sm mb-4">Join virtual cooking classes and explore culinary traditions online.</p>
+                             <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Culinary</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Street Food</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Cooking</span>
+                            </div>
+                           <div class="flex justify-between items-center">
+                                <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full text-sm transition duration-300 open-details-modal-btn"
+                                        data-experience-name="Virtual Food & Drink Experience"
+                                        data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Food"
+                                        data-experience-price="1200"
+                                        data-experience-type="Virtual">Start Virtual Tour</button>
+                                <a href="#" class="text-orange-500 hover:text-orange-700 font-semibold text-sm">View Details &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Card 4 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="400">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Wellness" alt="Virtual Wellness" class="w-full h-48 object-cover">
+                             <button class="absolute top-3 right-3 bg-red-500 text-white rounded-full p-2 shadow-md hover:bg-red-600 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg mb-2">Wellness</h4>
+                             <p class="text-gray-600 text-sm mb-4">Participate in online yoga, meditation, and wellness programs.</p>
+                             <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Yoga</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Ayurveda</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Meditation</span>
+                                <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">Spa</span>
+                             </div>
+                            <div class="flex justify-between items-center">
+                                <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full text-sm transition duration-300 open-details-modal-btn"
+                                        data-experience-name="Virtual Wellness Program"
+                                        data-experience-image="https://via.placeholder.com/400x300/cccccc/888888?text=Virtual+Wellness"
+                                        data-experience-price="900"
+                                        data-experience-type="Virtual">Start Virtual Tour</button>
+                                <a href="#" class="text-orange-500 hover:text-orange-700 font-semibold text-sm">View Details &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Trek Modal -->
+    <div id="trekModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[80vh] overflow-hidden flex flex-col" data-aos="zoom-in" data-aos-duration="300">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-xl font-semibold text-gray-800">Available Himalayan Treks</h3>
+                <button id="closeTrekModalBtn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal Body - Scrollable -->
+            <div class="p-6 overflow-x-auto">
+                 <div class="flex space-x-6 pb-4">
+                    <!-- Sample Trek Card 1 -->
+                    <div class="flex-shrink-0 w-72 bg-gray-50 rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <img src="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+1" alt="Trek 1" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-bold text-md mb-1">Everest Base Camp</h4>
+                            <p class="text-gray-600 text-sm mb-3">14 Days | Challenging</p>
+                            <a href="#" class="trek-details-link text-sm text-orange-500 hover:text-orange-700 font-semibold open-details-modal-btn"
+                               data-trek-name="Everest Base Camp"
+                               data-duration="14 Days"
+                               data-difficulty="Challenging"
+                               data-experience-name="Everest Base Camp Trek"
+                               data-experience-image="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+1"
+                               data-experience-price="50000"
+                               data-experience-type="Trek">
+                                View Details &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Sample Trek Card 2 -->
+                    <div class="flex-shrink-0 w-72 bg-gray-50 rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <img src="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+2" alt="Trek 2" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-bold text-md mb-1">Annapurna Circuit</h4>
+                            <p class="text-gray-600 text-sm mb-3">12 Days | Moderate</p>
+                             <a href="#" class="trek-details-link text-sm text-orange-500 hover:text-orange-700 font-semibold open-details-modal-btn"
+                                data-trek-name="Annapurna Circuit"
+                                data-duration="12 Days"
+                                data-difficulty="Moderate"
+                                data-experience-name="Annapurna Circuit Trek"
+                                data-experience-image="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+2"
+                                data-experience-price="45000"
+                                data-experience-type="Trek">
+                                 View Details &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Sample Trek Card 3 -->
+                     <div class="flex-shrink-0 w-72 bg-gray-50 rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <img src="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+3" alt="Trek 3" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-bold text-md mb-1">Valley of Flowers</h4>
+                            <p class="text-gray-600 text-sm mb-3">7 Days | Easy</p>
+                             <a href="#" class="trek-details-link text-sm text-orange-500 hover:text-orange-700 font-semibold open-details-modal-btn"
+                                data-trek-name="Valley of Flowers"
+                                data-duration="7 Days"
+                                data-difficulty="Easy"
+                                data-experience-name="Valley of Flowers Trek"
+                                data-experience-image="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+3"
+                                data-experience-price="25000"
+                                data-experience-type="Trek">
+                                 View Details &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Sample Trek Card 4 -->
+                    <div class="flex-shrink-0 w-72 bg-gray-50 rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <img src="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+4" alt="Trek 4" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-bold text-md mb-1">Roopkund Trek</h4>
+                            <p class="text-gray-600 text-sm mb-3">9 Days | Difficult</p>
+                             <a href="#" class="trek-details-link text-sm text-orange-500 hover:text-orange-700 font-semibold open-details-modal-btn"
+                                data-trek-name="Roopkund Trek"
+                                data-duration="9 Days"
+                                data-difficulty="Difficult"
+                                data-experience-name="Roopkund Trek"
+                                data-experience-image="https://via.placeholder.com/300x200/cccccc/888888?text=Trek+Option+4"
+                                data-experience-price="35000"
+                                data-experience-type="Trek">
+                                 View Details &rarr;</a>
+                        </div>
+                    </div>
+                     <!-- Add more trek cards as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience Details Modal (Renamed from Trek Details Modal) -->
+    <div id="experienceDetailsModal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md flex justify-center items-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col" data-aos="fade-up" data-aos-duration="400">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b bg-gray-50 rounded-t-lg">
+                <h3 id="experienceDetailsTitle" class="text-xl font-semibold text-gray-800">Experience Details</h3>
+                <button id="closeExperienceDetailsBtn" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 overflow-y-auto">
+                <img id="experienceDetailsImage" src="" alt="Experience Image" class="w-full h-64 object-cover rounded-lg mb-4">
+                
+                <!-- Optional fields - can be hidden if not applicable -->
+                <div class="mb-4 space-x-2" id="experienceDetailsTags">
+                    <span id="experienceDetailsDuration" class="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded hidden"></span>
+                    <span id="experienceDetailsDifficulty" class="inline-block bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded hidden"></span>
+                    <span id="experienceDetailsType" class="inline-block bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded"></span> 
+                </div>
+
+                <h4 class="text-2xl font-bold text-gray-900 mb-3">Key Features:</h4>
+                <ul id="experienceDetailsFeatures" class="list-disc list-inside text-gray-700 space-y-1 mb-4 text-sm">
+                    <!-- Generic Placeholders - Consider making these dynamic -->
+                    <li>High-Quality Instruction/Guidance</li>
+                    <li>Necessary Equipment/Materials Provided (if applicable)</li>
+                    <li>Unique Location/Setting Access</li>
+                    <li>Memorable Experience Guarantee</li>
+                    <li>Safety Measures in Place</li>
+                </ul>
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">Description:</h4>
+                <p id="experienceDetailsDescription" class="text-gray-600 text-sm mb-6">
+                    Placeholder description for this experience. Learn more about what makes this activity unique, the highlights, and what to expect. Get ready for an amazing time!
+                </p>
+                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Price:</h4>
+                <p class="text-2xl font-bold text-orange-600 mb-6">₹<span id="experienceDetailsPrice">0</span></p>
+
+            </div>
+             <!-- Modal Footer -->
+             <div class="p-4 border-t bg-gray-50 rounded-b-lg text-right">
+                 <button id="bookExperienceBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full transition duration-300">
+                    Book Experience Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Column 1: Logo & Description -->
+                <div>
+                    <h4 class="text-xl font-bold text-orange-500 mb-4">ExploreIndia</h4>
+                    <p class="text-sm mb-4">
+                        Your ultimate guide to unforgettable experiences in India. Explore culture, adventure, and beauty.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">...</svg></a> <!-- Placeholder Icon -->
+                        <a href="#" class="text-gray-400 hover:text-white"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">...</svg></a> <!-- Placeholder Icon -->
+                        <a href="#" class="text-gray-400 hover:text-white"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">...</svg></a> <!-- Placeholder Icon -->
+                         <a href="#" class="text-gray-400 hover:text-white"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">...</svg></a> <!-- Placeholder Icon -->
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div>
+                    <h5 class="text-lg font-semibold text-white mb-4">Quick Links</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">Destinations</a></li>
+                        <li><a href="#" class="hover:text-white">Experiences</a></li>
+                        <li><a href="#" class="hover:text-white">Events</a></li>
+                        <li><a href="#" class="hover:text-white">Trip Planner</a></li>
+                        <li><a href="#" class="hover:text-white">About Us</a></li>
+                    </ul>
+                </div>
+
+                 <!-- Column 3: Resources -->
+                 <div>
+                    <h5 class="text-lg font-semibold text-white mb-4">Resources</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                        <li><a href="#" class="hover:text-white">Travel Guides</a></li>
+                        <li><a href="#" class="hover:text-white">Safety Guidelines</a></li>
+                        <li><a href="#" class="hover:text-white">COVID-19 Updates</a></li>
+                         <li><a href="#" class="hover:text-white">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Contact Us -->
+                <div>
+                    <h5 class="text-lg font-semibold text-white mb-4">Contact Us</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 mr-2 mt-0.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">...</svg> <!-- Placeholder Icon -->
+                            <span>123 Explore St, New Delhi, 110001, India</span>
+                        </li>
+                         <li class="flex items-center">
+                             <svg class="h-5 w-5 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">...</svg> <!-- Placeholder Icon -->
+                            <span>+91-123-456-7890</span>
+                        </li>
+                         <li class="flex items-center">
+                            <svg class="h-5 w-5 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">...</svg> <!-- Placeholder Icon -->
+                            <span>info@exploreindia.com</span>
+                         </li>
+                    </ul>
+                 </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="mt-10 pt-8 border-t border-gray-700 text-center text-sm">
+                <p>&copy; 2024 ExploreIndia. All Rights Reserved. Made with ❤️ in India.</p>
+                 <div class="mt-2">
+                    <a href="#" class="hover:text-white mx-2">Privacy Policy</a> |
+                    <a href="#" class="hover:text-white mx-2">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+             once: true, // Whether animation should happen only once - while scrolling down
+             duration: 800, // values from 0 to 3000, with step 50ms
+             easing: 'ease-in-out', // default easing for AOS animations
+        });
+
+        // Modal JavaScript
+        const browseTreksBtn = document.getElementById('browseTreksBtn');
+        const trekModal = document.getElementById('trekModal');
+        const closeTrekModalBtn = document.getElementById('closeTrekModalBtn');
+        const body = document.body;
+        const detailTriggerButtons = document.querySelectorAll('.open-details-modal-btn'); // Select ALL buttons/links that open the details modal
+
+        // Details Modal Elements
+        const experienceDetailsModal = document.getElementById('experienceDetailsModal');
+        const closeExperienceDetailsBtn = document.getElementById('closeExperienceDetailsBtn');
+        const experienceDetailsTitle = document.getElementById('experienceDetailsTitle');
+        const experienceDetailsImage = document.getElementById('experienceDetailsImage');
+        const experienceDetailsDuration = document.getElementById('experienceDetailsDuration');
+        const experienceDetailsDifficulty = document.getElementById('experienceDetailsDifficulty');
+        const experienceDetailsType = document.getElementById('experienceDetailsType');
+        const experienceDetailsPrice = document.getElementById('experienceDetailsPrice');
+        const bookExperienceBtn = document.getElementById('bookExperienceBtn');
+
+        // --- Modal 1 (Trek List) Logic ---
+        const openTrekListModal = () => {
+            trekModal.classList.remove('hidden');
+            trekModal.classList.add('flex');
+            body.style.overflow = 'hidden';
+        };
+
+        const closeTrekListModal = () => {
+            trekModal.classList.add('hidden');
+            trekModal.classList.remove('flex');
+            if (experienceDetailsModal.classList.contains('hidden')) { // Only restore scroll if details modal is also hidden
+                 body.style.overflow = '';
+            }
+        };
+
+        if (browseTreksBtn && trekModal && closeTrekModalBtn) {
+            browseTreksBtn.addEventListener('click', openTrekListModal);
+            closeTrekModalBtn.addEventListener('click', closeTrekListModal);
+            trekModal.addEventListener('click', (event) => {
+                if (event.target === trekModal) {
+                    closeTrekListModal();
+                }
+            });
+        }
+
+        // --- Modal 2 (Trek Details) Logic ---
+        let currentExperienceData = {}; // To store data for Razorpay
+
+        const openDetailsModal = (experienceData) => {
+            currentExperienceData = experienceData; // Store for booking button
+            experienceDetailsTitle.textContent = experienceData.name;
+            experienceDetailsImage.src = experienceData.imageSrc;
+            experienceDetailsImage.alt = `Image of ${experienceData.name}`;
+
+            // Show/hide optional fields based on data presence
+            if (experienceData.duration) {
+                experienceDetailsDuration.textContent = experienceData.duration;
+                experienceDetailsDuration.classList.remove('hidden');
+            } else {
+                experienceDetailsDuration.classList.add('hidden');
+            }
+            if (experienceData.difficulty) {
+                experienceDetailsDifficulty.textContent = experienceData.difficulty;
+                experienceDetailsDifficulty.classList.remove('hidden');
+            } else {
+                experienceDetailsDifficulty.classList.add('hidden');
+            }
+            experienceDetailsType.textContent = experienceData.type || 'Experience'; // Default if type not provided
+
+            experienceDetailsPrice.textContent = (experienceData.price / 100).toLocaleString('en-IN'); // Format price from paise
+
+            if (!trekModal.classList.contains('hidden')) {
+                closeTrekListModal(); // Close the trek list modal if it's open
+            }
+            experienceDetailsModal.classList.remove('hidden');
+            experienceDetailsModal.classList.add('flex');
+            body.style.overflow = 'hidden'; // Ensure body scroll is hidden
+        };
+
+        const closeDetailsModal = () => {
+            experienceDetailsModal.classList.add('hidden');
+            experienceDetailsModal.classList.remove('flex');
+            body.style.overflow = ''; // Restore scroll
+        };
+
+        if (experienceDetailsModal && closeExperienceDetailsBtn) {
+            closeExperienceDetailsBtn.addEventListener('click', closeDetailsModal);
+            experienceDetailsModal.addEventListener('click', (event) => {
+                if (event.target === experienceDetailsModal) {
+                    closeDetailsModal();
+                }
+            });
+        }
+
+        // Add event listeners for ALL detail trigger buttons/links
+        detailTriggerButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const targetButton = event.currentTarget;
+                const experienceData = {
+                    name: targetButton.getAttribute('data-experience-name') || 'Selected Experience',
+                    imageSrc: targetButton.getAttribute('data-experience-image') || 'https://via.placeholder.com/600x400/cccccc/888888?text=Experience',
+                    price: parseInt(targetButton.getAttribute('data-experience-price') || '0', 10),
+                    type: targetButton.getAttribute('data-experience-type') || 'General',
+                    duration: targetButton.getAttribute('data-duration'),
+                    difficulty: targetButton.getAttribute('data-difficulty')
+                };
+
+                // Basic validation for price
+                if (isNaN(experienceData.price)) {
+                    console.error("Invalid price data for button:", targetButton);
+                    alert("Sorry, pricing information for this item is currently unavailable.");
+                    return;
+                }
+
+                openDetailsModal(experienceData);
+            });
+        });
+
+        // --- Razorpay Button Logic ---
+        if (bookExperienceBtn) {
+            bookExperienceBtn.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default anchor/button behavior
+                console.log("Booking Experience:", currentExperienceData);
+
+                const amount = currentExperienceData.price; // Amount in paise
+                const currency = 'INR';
+                const experienceName = currentExperienceData.name;
+                const razorpayKeyId = 'rzp_test_wgiBcEeHVPFAPi'; // Using your provided Test Key ID
+
+                if (!razorpayKeyId || razorpayKeyId === 'rzp_test_********' || razorpayKeyId === 'YOUR_KEY_ID') {
+                    alert('Razorpay Key ID is not configured correctly. Please contact support.');
+                    console.error("Razorpay Key ID is missing or invalid.");
+                    return;
+                }
+
+                const options = {
+                    "key": razorpayKeyId,
+                    "amount": amount.toString(), // Amount is in currency subunits.
+                    "currency": currency,
+                    "name": "ExploreIndia Treks", // Your business name
+                    "description": `Booking for ${experienceName}`, // A brief description
+                    "image": "https://via.placeholder.com/100x100?text=EI", // Your logo URL (optional)
+                    "handler": function (response){
+                        console.log("Razorpay Success Response:", response);
+                        alert(`Booking Confirmed (Test Mode)!\nPayment ID: ${response.razorpay_payment_id}\nExperience: ${experienceName}`);
+                        // Add logic here post-payment success (e.g., redirect, show confirmation)
+                        closeDetailsModal();
+                    },
+                    "prefill": { // Optional
+                        "name": "Test User",
+                        "email": "test.user@example.com",
+                        "contact": "9999999999"
+                    },
+                    "notes": {
+                        "experience_name": experienceName,
+                        "booking_source": "Experiences Page Test"
+                    },
+                    "theme": {
+                        "color": "#F97316" // Orange theme
+                    },
+                     "modal": {
+                        "ondismiss": function(){
+                            console.log('Razorpay checkout modal dismissed');
+                        }
+                    }
+                };
+
+                try {
+                    const rzp1 = new Razorpay(options);
+
+                    rzp1.on('payment.failed', function (response){
+                        console.error("Razorpay Payment Failed:", response);
+                        alert(`Payment Failed (Test Mode) for ${experienceName}:\nError Code: ${response.error.code}\nDescription: ${response.error.description}`);
+                         // Optionally handle payment failure (e.g., keep modal open)
+                    });
+
+                    rzp1.open();
+                } catch (error) {
+                    console.error("Error initializing Razorpay checkout:", error);
+                    alert("Could not initialize payment gateway. Please check configuration or try again.");
+                }
+
+            });
+        }
+
+        // --- Hero Button Scroll --- 
+        const exploreBtn = document.getElementById('exploreExperiencesBtn');
+        const filtersSection = document.getElementById('experienceFiltersSection');
+
+        if (exploreBtn && filtersSection) {
+            exploreBtn.addEventListener('click', () => {
+                filtersSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // --- Experience Filtering Logic ---
+        const filterBtnContainer = document.getElementById('filterBtnContainer');
+        const experienceSections = document.querySelectorAll('.experience-section');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        if (filterBtnContainer && experienceSections.length > 0 && filterButtons.length > 0) {
+            filterBtnContainer.addEventListener('click', (event) => {
+                const clickedButton = event.target.closest('.filter-btn');
+                if (!clickedButton) return; // Exit if click wasn't on a filter button
+
+                const filterValue = clickedButton.getAttribute('data-filter');
+
+                // Update button styles
+                filterButtons.forEach(button => {
+                    if (button === clickedButton) {
+                        button.classList.add('bg-orange-500', 'text-white');
+                        button.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                    } else {
+                        button.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                        button.classList.remove('bg-orange-500', 'text-white');
+                    }
+                });
+
+                // Filter sections
+                experienceSections.forEach(section => {
+                    const sectionCategory = section.getAttribute('data-category');
+                    if (filterValue === 'all' || filterValue === sectionCategory) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+
+                // Refresh AOS animations
+                AOS.refresh();
+            });
+        }
+
+    </script>
+</body>
+</html>

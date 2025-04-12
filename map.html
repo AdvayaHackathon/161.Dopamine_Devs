@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Map - Explore India</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    
+    <style>
+        #map { 
+            height: 600px; 
+            width: 100%;
+            z-index: 1;
+        }
+        .destination-popup .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+            background: #fff; /* Ensure background */
+            padding: 1px; /* Prevent content overflow */
+        }
+        .destination-popup .leaflet-popup-content {
+            margin: 12px;
+            min-width: 200px; /* Adjust if needed */
+            max-width: 250px;
+            line-height: 1.4;
+        }
+        .destination-popup img {
+            width: 100%;
+            height: 120px; /* Adjusted height */
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .weather-info img.weather-icon {
+            width: 30px;  /* Smaller icon */
+            height: 30px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .weather-info span {
+            vertical-align: middle;
+        }
+        .attraction-item {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+        }
+        .attraction-item:last-child {
+            border-bottom: none;
+        }
+        /* Add styles for filter buttons */
+        .filter-btn {
+            font-weight: 500;
+            /* border: 2px solid transparent; */ /* Remove border */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            /* Add subtle transition */
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            transform: translateY(0);
+        }
+        .filter-btn:hover {
+            /* Increase transparency slightly on hover */
+            /* background-color: rgba(255, 255, 255, 0.3); */ /* Handled by Tailwind hover:bg-white/30 */
+            transform: translateY(-1px); /* Slight lift */
+        }
+        .filter-btn.active {
+            /* background-color: #22c55e !important; Green background */
+            /* color: white !important; */
+            /* background-color: white !important; White background for active */
+            /* color: #06B6D4 !important; Use primary color for text */
+            /* background-color: #FF6B6B !important; Use secondary color for active */
+            /* color: white !important; Ensure text is white */
+            /* background-color: #FF6B6B; Use secondary color for active */
+            /* color: white; Ensure text is white */
+            background-color: rgba(255, 255, 255, 0.3) !important; /* Semi-transparent white */
+            color: white !important; /* Keep text white for now, or use primary: #06B6D4; */
+            /* border-color: white; */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Slightly reduced shadow for active */
+            transform: translateY(0); /* No lift or minimal lift */
+            font-weight: 600; /* Slightly bolder */
+            /* animation: pulse 1.5s infinite; */ /* Remove pulse animation */
+        }
+        
+        /* Style for route buttons */
+        .show-route-btn {
+            transition: all 0.3s ease;
+        }
+        .show-route-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="font-sans text-dark bg-light">
+    <!-- Header (same as other pages) -->
+    <header class="bg-white shadow-md fixed w-full z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-display font-bold text-primary">
+                        Explore<span class="text-secondary">India</span>
+                    </a>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="destinations.html" class="font-medium hover:text-primary transition-colors">Destinations</a>
+                    <a href="experiences.html" class="font-medium hover:text-primary transition-colors">Experiences</a>
+                    <a href="events.html" class="font-medium hover:text-primary transition-colors">Events</a>
+                    <a href="map.html" class="font-medium text-primary">Interactive Map</a>
+                    <a href="planner.html" class="font-medium hover:text-primary transition-colors">Trip Planner</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-dark focus:outline-none">
+                        <span class="fas fa-bars text-xl"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white w-full py-4 px-6 shadow-lg">
+            <nav class="flex flex-col space-y-4">
+                <a href="destinations.html" class="font-medium hover:text-primary transition-colors">Destinations</a>
+                <a href="experiences.html" class="font-medium hover:text-primary transition-colors">Experiences</a>
+                <a href="events.html" class="font-medium hover:text-primary transition-colors">Events</a>
+                <a href="map.html" class="font-medium text-primary">Interactive Map</a>
+                <a href="planner.html" class="font-medium hover:text-primary transition-colors">Trip Planner</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Banner -->
+    <section class="bg-gradient-to-br from-primary to-blue-600 text-white pt-32 pb-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-display font-bold mb-4">Explore India's Destinations</h1>
+            <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto text-blue-100">Discover incredible places across India with our interactive map</p>
+            
+            <!-- Filter Controls -->
+            <div class="max-w-4xl mx-auto mt-4 mx-4">
+                <h3 class="text-lg font-medium mb-5">Filter by Region</h3>
+                <div class="flex flex-wrap justify-center items-center gap-3 md:gap-4">
+                    <button class="filter-btn bg-secondary hover:bg-red-500 text-white px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium shadow-md" data-filter="all">All</button>
+                    <button class="filter-btn bg-secondary hover:bg-red-500 text-white px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium shadow-md" data-filter="north"><i class="fas fa-compass mr-1 opacity-70"></i>North</button>
+                    <button class="filter-btn bg-secondary hover:bg-red-500 text-white px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium shadow-md" data-filter="south"><i class="fas fa-compass mr-1 opacity-70"></i>South</button>
+                    <button class="filter-btn bg-secondary hover:bg-red-500 text-white px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium shadow-md" data-filter="east"><i class="fas fa-compass mr-1 opacity-70"></i>East</button>
+                    <button class="filter-btn bg-secondary hover:bg-red-500 text-white px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium shadow-md" data-filter="west"><i class="fas fa-compass mr-1 opacity-70"></i>West</button>
+                    <button class="filter-btn bg-secondary hover:bg-red-500 text-white px-5 py-2 rounded-full transition-all duration-300 text-sm font-medium shadow-md" data-filter="central"><i class="fas fa-compass mr-1 opacity-70"></i>Central</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-10">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-xl shadow-lg p-6 relative">
+                <!-- Add Location Button -->
+                 <button id="find-location-btn" class="absolute top-2 right-2 z-[1000] bg-white p-2 rounded-md shadow-md hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="Find My Location">
+                     <i class="fas fa-crosshairs text-primary text-lg"></i>
+                 </button>
+                <div id="map"></div>
+            </div>
+            
+            <!-- Popular Routes -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-display font-bold mb-6">Popular Travel Routes</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Route 1 -->
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-bold mb-3">Golden Triangle</h3>
+                        <p class="text-gray-600 mb-4">Delhi → Agra → Jaipur → Delhi</p>
+                        <p class="text-gray-700 mb-4">Experience India's most iconic circuit featuring the Taj Mahal, historic Delhi, and the Pink City of Jaipur.</p>
+                        <button class="show-route-btn bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition-colors" data-route="golden-triangle">
+                            Show on Map
+                        </button>
+                    </div>
+                    
+                    <!-- Route 2 -->
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-bold mb-3">Kerala Circuit</h3>
+                        <p class="text-gray-600 mb-4">Kochi → Munnar → Thekkady → Alleppey → Kovalam</p>
+                        <p class="text-gray-700 mb-4">Explore God's Own Country with its hill stations, wildlife sanctuaries, backwaters, and beaches.</p>
+                        <button class="show-route-btn bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition-colors" data-route="kerala">
+                            Show on Map
+                        </button>
+                    </div>
+                    
+                    <!-- Route 3 -->
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-bold mb-3">Rajasthan Heritage</h3>
+                        <p class="text-gray-600 mb-4">Jaipur → Jodhpur → Udaipur → Jaisalmer</p>
+                        <p class="text-gray-700 mb-4">Discover the royal heritage of Rajasthan through its magnificent forts, palaces, and desert landscapes.</p>
+                        <button class="show-route-btn bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition-colors" data-route="rajasthan">
+                            Show on Map
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Distance Calculator -->
+    <section class="py-10 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-display font-bold mb-6 text-center">Plan Your Journey</h2>
+            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6">
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-2" for="from-destination">From</label>
+                    <select id="from-destination" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">Select starting point</option>
+                        <!-- Options will be added by JavaScript -->
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-2" for="to-destination">To</label>
+                    <select id="to-destination" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">Select destination</option>
+                        <!-- Options will be added by JavaScript -->
+                    </select>
+                </div>
+                <button id="calculate-route" class="w-full bg-primary text-black font-medium py-6 rounded-lg hover:bg-opacity-90 transition-colors">
+                    Calculate Route
+                </button>
+                
+                <div id="route-result" class="mt-6 hidden">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Journey Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600">Distance</p>
+                                <p id="route-distance" class="font-medium">--</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Estimated Time</p>
+                                <p id="route-time" class="font-medium">--</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-gray-600">Recommended Transport</p>
+                            <p id="route-transport" class="font-medium">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nearby Attractions Section -->
+    <section class="py-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-display font-bold mb-6 text-center">Discover Nearby Attractions</h2>
+            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6">
+                <p class="text-gray-600 mb-6 text-center">Select a destination to see what's nearby</p>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-2" for="attraction-destination">Destination</label>
+                    <select id="attraction-destination" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">Select destination</option>
+                        <!-- Options will be added by JavaScript -->
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2" for="attraction-type">Attraction Type</label>
+                        <select id="attraction-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="tourist_attraction">Tourist Attractions</option>
+                            <option value="restaurant">Restaurants</option>
+                            <option value="hotel">Hotels</option>
+                            <option value="museum">Museums</option>
+                            <option value="shopping_mall">Shopping</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2" for="attraction-radius">Search Radius (km)</label>
+                        <select id="attraction-radius" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="5">5 km</option>
+                            <option value="10" selected>10 km</option>
+                            <option value="20">20 km</option>
+                            <option value="50">50 km</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="find-attractions" class="w-full bg-secondary text-black font-medium py-3 rounded-lg hover:bg-opacity-90 transition-colors">
+                    Find Nearby Attractions
+                </button>
+                
+                <div id="attractions-results" class="mt-6 hidden">
+                    <h3 class="font-bold text-lg mb-4">Nearby Places</h3>
+                    <div id="attractions-list" class="max-h-80 overflow-y-auto p-2">
+                        <!-- Results will be added here -->
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button id="show-attractions-map" class="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition-colors">
+                            Show on Map
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Time to Visit Section -->
+    <section class="py-10 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-display font-bold mb-6 text-center">Best Time to Visit</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Season 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-3 text-primary">October - March</h3>
+                    <p class="text-lg font-medium mb-2">Winter Season</p>
+                    <p class="text-gray-600 mb-4">The most pleasant time to visit most parts of India with cooler temperatures and minimal rainfall.</p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Perfect for North India, Rajasthan, and major cities</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Ideal for cultural tours and heritage sites</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Peak tourist season with excellent weather</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Season 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-3 text-primary">April - June</h3>
+                    <p class="text-lg font-medium mb-2">Summer Season</p>
+                    <p class="text-gray-600 mb-4">Hot throughout most of India, but excellent for hill stations and mountain regions.</p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Best for Himalayan regions like Darjeeling</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Good for wildlife safaris (animals gather at water sources)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Lower prices and fewer tourists</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Season 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-3 text-primary">July - September</h3>
+                    <p class="text-lg font-medium mb-2">Monsoon Season</p>
+                    <p class="text-gray-600 mb-4">The rainy season brings lush green landscapes and is perfect for certain regions.</p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Ideal for Kerala and Western Ghats</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Beautiful waterfalls and lush scenery</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mt-1 mr-2"><i class="fas fa-check-circle"></i></span>
+                            <span>Great for budget travelers (off-season discounts)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (same as other pages) -->
+    <footer class="bg-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">ExploreIndia</h3>
+                    <p class="text-gray-400 mb-6">Your ultimate guide to experiencing India. Discover destinations, plan your trip, and create unforgettable memories.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><span class="fab fa-facebook-f"></span></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><span class="fab fa-twitter"></span></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><span class="fab fa-instagram"></span></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><span class="fab fa-youtube"></span></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="destinations.html" class="text-gray-400 hover:text-white transition-colors">Destinations</a></li>
+                        <li><a href="experiences.html" class="text-gray-400 hover:text-white transition-colors">Experiences</a></li>
+                        <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
+                        <li><a href="planner.html" class="text-gray-400 hover:text-white transition-colors">Trip Planner</a></li>
+                        <li><a href="map.html" class="text-gray-400 hover:text-white transition-colors">Interactive Map</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Travel Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Visa Information</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Weather Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Safety Guidelines</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="fas fa-map-marker-alt mt-1 mr-3"></span>
+                            <span>123 Tourism Street, New Delhi, India</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="fas fa-phone-alt mt-1 mr-3"></span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="fas fa-envelope mt-1 mr-3"></span>
+                            <span>info@exploreindia.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 mb-4 md:mb-0">&copy; 2023 ExploreIndia. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Accessibility</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet Routing Machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    
+    <!-- Map JavaScript -->
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([22.5937, 78.9629], 5); // Center on India
+        
+        // Add tile layer (map style)
+        L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=xLJUEX5stAFSTBy7jE8G', {
+            attribution: '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+            maxZoom: 19, // MapTiler generally supports higher zoom
+            tileSize: 512,
+            zoomOffset: -1
+        }).addTo(map);
+        
+        // Custom icon for markers
+        const destinationIcon = L.icon({
+            iconUrl: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+        
+        // Define destinations with details
+        const destinations = [
+            {
+                name: "Taj Mahal, Agra",
+                coords: [27.1751, 78.0421],
+                image: "images/tajmahal.jpg",
+                description: "One of the world's most famous monuments, this ivory-white marble mausoleum is the epitome of love and Mughal architecture.",
+                rating: 4.8,
+                region: "north",
+                link: "destinations.html#tajmahal"
+            },
+            {
+                name: "Varanasi",
+                coords: [25.3176, 83.0130],
+                image: "images/varanasi.jpg",
+                description: "One of the world's oldest living cities, Varanasi is a spiritual hub where pilgrims come to bathe in the sacred Ganges River.",
+                rating: 4.7,
+                region: "north",
+                link: "destinations.html#varanasi"
+            },
+            {
+                name: "Kerala Backwaters",
+                coords: [9.4981, 76.3388],
+                image: "images/kerala backwater.jpg",
+                description: "A network of interconnected canals, rivers, lakes, and inlets formed by more than 900 km of waterways.",
+                rating: 4.9,
+                region: "south",
+                link: "destinations.html#kerala"
+            },
+            {
+                name: "Jaipur",
+                coords: [26.9124, 75.7873],
+                image: "images/tajmahal.jpg", // Update with Jaipur image
+                description: "Known as the 'Pink City', Jaipur is famous for its colorful buildings, grand palaces, and vibrant bazaars.",
+                rating: 4.6,
+                region: "north",
+                link: "destinations.html#jaipur"
+            },
+            {
+                name: "Goa Beaches",
+                coords: [15.2993, 74.1240],
+                image: "images/Goa.jpg",
+                description: "India's smallest state is known for its beaches, nightlife, and unique blend of Indian and Portuguese cultures.",
+                rating: 4.5,
+                region: "west",
+                link: "destinations.html#goa"
+            },
+            {
+                name: "Darjeeling",
+                coords: [27.0410, 88.2663],
+                image: "images/Darjeeling.jpg",
+                description: "Famous for its tea plantations, stunning views of the Himalayas, and the historic 'Toy Train'.",
+                rating: 4.6,
+                region: "east",
+                link: "destinations.html#darjeeling"
+            },
+            {
+                name: "Delhi",
+                coords: [28.6139, 77.2090],
+                image: "images/tajmahal.jpg", // Update with Delhi image
+                description: "India's capital is a blend of ancient monuments and modern infrastructure, offering rich history and culture.",
+                rating: 4.5,
+                region: "north",
+                link: "destinations.html"
+            },
+            {
+                name: "Mumbai",
+                coords: [19.0760, 72.8777],
+                image: "images/tajmahal.jpg", // Update with Mumbai image
+                description: "The financial capital of India, known for its colonial architecture, beaches, and Bollywood film industry.",
+                rating: 4.4,
+                region: "west",
+                link: "destinations.html"
+            },
+            {
+                name: "Udaipur",
+                coords: [24.5854, 73.7125],
+                image: "images/tajmahal.jpg", // Update with Udaipur image
+                description: "Known as the 'City of Lakes', Udaipur is famous for its palaces, temples, and serene lakes.",
+                rating: 4.7,
+                region: "north",
+                link: "destinations.html"
+            },
+            {
+                name: "Kolkata",
+                coords: [22.5726, 88.3639],
+                image: "images/tajmahal.jpg", // Update with Kolkata image
+                description: "The cultural capital of India with its colonial architecture, art galleries, and rich literary heritage.",
+                rating: 4.3,
+                region: "east",
+                link: "destinations.html"
+            }
+        ];
+        
+        // --- API Keys --- 
+        const OPENWEATHERMAP_API_KEY = '6276a7ba809c2e3dca9a9cae4e5a401d'; 
+        const UNSPLASH_ACCESS_KEY = 'ANay95MLLCvwIAqYdJ0FWQz4Q0YxxW_NoXppkLDdZjE'; // <<< Key inserted
+
+        // --- Image Cache ---
+        const imageCache = {};
+
+        // --- NEW: Weather Fetch Function ---
+        async function fetchAndDisplayWeather(lat, lon, containerElement) {
+            if (!OPENWEATHERMAP_API_KEY || OPENWEATHERMAP_API_KEY === 'YOUR_OPENWEATHERMAP_API_KEY') {
+                containerElement.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> API key missing.';
+                console.error('OpenWeatherMap API Key is missing.');
+                return;
+            }
+            
+            // Explicitly show loading state just before fetch
+            containerElement.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Loading weather...';
+
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}&units=metric`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                     // Handle HTTP errors (like 401 Unauthorized, 404 Not Found, 429 Rate Limit)
+                    console.error(`Weather API Error: ${response.status} ${response.statusText}`);
+                    const errorData = await response.json().catch(() => ({ message: "Failed to parse error response" })); // Try to get error message from API
+                    containerElement.innerHTML = `<i class="fas fa-exclamation-triangle mr-1"></i> Error: ${errorData.message || response.statusText}`; 
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Check for expected data structure
+                if (!data.main || !data.weather || !data.weather[0]) {
+                    console.error("Weather API response format unexpected:", data);
+                    containerElement.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Bad response format.';
+                    throw new Error("Unexpected weather data format");
+                }
+
+                // Format and display weather
+                const temp = Math.round(data.main.temp);
+                const feelsLike = Math.round(data.main.feels_like);
+                const description = data.weather[0].description;
+                const iconCode = data.weather[0].icon;
+                const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
+                const humidity = data.main.humidity; // Humidity percentage
+                const windSpeed = data.wind.speed; // Wind speed (m/s by default)
+
+                containerElement.innerHTML = `
+                    <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                        <img src="${iconUrl}" alt="${description}" class="weather-icon" title="${description}">
+                        <span style="font-weight: 500;">${temp}°C</span>
+                        <span style="margin-left: 8px; color: #555;">(Feels like ${feelsLike}°C)</span>
+                    </div>
+                    <div style="font-size: 0.8em; color: #666;">
+                        <span title="Humidity" style="margin-right: 10px;"><i class="fas fa-tint fa-fw"></i> ${humidity}%</span>
+                        <span title="Wind Speed"><i class="fas fa-wind fa-fw"></i> ${windSpeed} m/s</span>
+                    </div>
+                `;
+                
+            } catch (error) {
+                // Catch network errors and errors thrown above
+                console.error("Error fetching or processing weather:", error);
+                // Avoid overwriting more specific error messages if already set
+                if (containerElement.innerHTML.includes('Loading')) { 
+                     containerElement.innerHTML = '<i class="fas fa-times-circle mr-1"></i> Weather unavailable.';
+                }
+            }
+        }
+
+        // --- NEW: Unsplash Image Fetch Function ---
+        async function fetchAndSetImage(imgElement, query) {
+            if (!imgElement) return;
+            imgElement.style.filter = 'brightness(0.8)'; // Dim placeholder
+
+            const cacheKey = query.toLowerCase();
+            if (imageCache[cacheKey]) {
+                imgElement.src = imageCache[cacheKey];
+                imgElement.style.filter = ''; // Remove dim
+                // console.log("Using cached image for:", query);
+                return;
+            }
+
+            if (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === 'YOUR_UNSPLASH_ACCESS_KEY') {
+                console.error('Unsplash Access Key is missing.');
+                // Keep placeholder or set a generic fallback?
+                // imgElement.alt = "Image requires API key"; 
+                return; 
+            }
+
+            const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape&client_id=${UNSPLASH_ACCESS_KEY}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    const imageUrl = data.results[0].urls.small; // Use 'small' for popups
+                    imageCache[cacheKey] = imageUrl;
+                    imgElement.src = imageUrl;
+                    imgElement.style.filter = ''; // Remove dim
+                } else {
+                     console.warn("No Unsplash image found for:", query);
+                     // Keep placeholder or set generic fallback
+                     imgElement.alt = "Image not found";
+                }
+
+            } catch (error) {
+                console.error("Error fetching Unsplash image:", error);
+                 // Keep placeholder or set generic fallback
+                 imgElement.alt = "Error loading image";
+            }
+        }
+        
+        // Create marker layers group for filtering
+        const markerGroups = {
+            all: L.layerGroup(),
+            north: L.layerGroup(),
+            south: L.layerGroup(),
+            east: L.layerGroup(),
+            west: L.layerGroup(),
+            central: L.layerGroup()
+        };
+        
+        // Add all markers to map with appropriate groups and event listeners
+        destinations.forEach(dest => {
+            const marker = L.marker(dest.coords, { icon: destinationIcon });
+            marker.coords = dest.coords; 
+            marker.destinationName = dest.name;
+            marker.imageQuery = `${dest.name} India`; // Pre-define search query
+            const placeholderImg = 'images/placeholder_landscape.png'; // Define a placeholder image path
+
+            marker.bindPopup(`
+                    <div class="destination-popup" style="min-width: 220px;">
+                        <img src="${placeholderImg}" alt="${dest.name}" class="popup-image" style="width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 8px; background-color: #eee;">
+                        <h3 class="text-lg font-bold mb-1">${dest.name}</h3>
+                        <div class="flex items-center mb-2">
+                            <span class="text-yellow-500 mr-1">★</span>
+                            <span>${dest.rating || 'N/A'}/5</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">${dest.description || 'No description available.'}</p>
+                        <div class="weather-info text-sm border-t pt-2 mt-2">
+                            <i class="fas fa-spinner fa-spin mr-1"></i> Loading weather...
+                        </div>
+                        <div class="mt-3">
+                            <a href="${dest.link || '#'}" class="inline-block bg-primary text-white px-3 py-1 rounded text-sm text-center hover:bg-opacity-90 transition-colors w-full">View Details</a>
+                        </div>
+                    </div>
+                `, { className: 'destination-popup' });
+
+            // Add listener to fetch weather and image when popup opens
+            marker.on('popupopen', (e) => {
+                const popup = e.popup;
+                const contentNode = popup.getElement();
+                if (!contentNode) return;
+
+                // Fetch Weather
+                const weatherContainer = contentNode.querySelector('.weather-info');
+                if (weatherContainer && marker.coords) {
+                    fetchAndDisplayWeather(marker.coords[0], marker.coords[1], weatherContainer);
+                } else {
+                     console.error('Could not find weather container or coords for popup');
+                }
+                
+                // Fetch Image
+                const imageElement = contentNode.querySelector('.popup-image');
+                if (imageElement && marker.imageQuery) {
+                    fetchAndSetImage(imageElement, marker.imageQuery);
+                } else {
+                     console.error('Could not find image element or query for popup');
+                }
+            });
+                
+            // Add to marker groups
+            markerGroups.all.addLayer(marker);
+            if (dest.region && markerGroups[dest.region]) {
+                markerGroups[dest.region].addLayer(marker);
+            }
+        });
+        
+        // Add the 'all' group to the map initially
+        markerGroups.all.addTo(map);
+        
+        // Handle filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Remove all marker groups from map
+                Object.values(markerGroups).forEach(group => map.removeLayer(group));
+                
+                // Add selected group to map
+                if (markerGroups[filter]) {
+                    markerGroups[filter].addTo(map);
+                }
+                
+                // Update active button style
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Set the "All Destinations" button as active by default
+        document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+        
+        // Popular routes
+        const routes = {
+            "golden-triangle": [
+                [28.6139, 77.2090], // Delhi
+                [27.1751, 78.0421], // Agra
+                [26.9124, 75.7873], // Jaipur
+                [28.6139, 77.2090]  // Back to Delhi
+            ],
+            "kerala": [
+                [9.9312, 76.2673],  // Kochi
+                [10.0889, 77.0595], // Munnar
+                [9.6003, 77.1666],  // Thekkady
+                [9.4981, 76.3388],  // Alleppey
+                [8.4004, 76.9780]   // Kovalam
+            ],
+            "rajasthan": [
+                [26.9124, 75.7873], // Jaipur
+                [26.2389, 73.0243], // Jodhpur
+                [24.5854, 73.7125], // Udaipur
+                [26.9157, 70.9083]  // Jaisalmer
+            ]
+        };
+        
+        let currentRoutePolyline = null;
+        let currentRouteControl = null; // Variable for routing control
+        let userLocationMarker = null; // Variable for user location marker
+        
+        // --- Find My Location --- 
+        document.getElementById('find-location-btn').addEventListener('click', function() {
+            map.locate({ setView: true, maxZoom: 14 }); // Use Leaflet's locate method
+        });
+
+        map.on('locationfound', function(e) {
+            const radius = e.accuracy;
+
+            // Remove previous marker if exists
+            if (userLocationMarker) {
+                map.removeLayer(userLocationMarker);
+            }
+
+            // Add new marker
+            userLocationMarker = L.marker(e.latlng).addTo(map)
+                .bindPopup(`You are within ${radius.toFixed(0)} meters from this point`).openPopup();
+
+            // Optionally, add a circle for accuracy
+            // L.circle(e.latlng, radius).addTo(map);
+            
+            // Populate the 'From' dropdown with current location
+            const fromSelect = document.getElementById('from-destination');
+            // Check if 'Current Location' already exists
+            let currentLocationOption = fromSelect.querySelector('option[value="current"]');
+            if (!currentLocationOption) {
+                currentLocationOption = document.createElement('option');
+                currentLocationOption.value = 'current'; 
+                currentLocationOption.textContent = '📍 My Current Location';
+                fromSelect.insertBefore(currentLocationOption, fromSelect.firstChild.nextSibling); // Add after placeholder
+            }
+             // Store coords in the option itself (or globally)
+            currentLocationOption.setAttribute('data-coords', `${e.latlng.lat},${e.latlng.lng}`);
+            fromSelect.value = 'current'; // Select it automatically
+            
+            console.log("Location found:", e.latlng);
+        });
+
+        map.on('locationerror', function(e) {
+            alert("Location access denied or unavailable. Please ensure location services are enabled in your browser and system settings.\nError: " + e.message);
+            console.error("Location error:", e);
+        });
+        // --- End Find My Location ---
+
+        // Route button handler
+        document.querySelectorAll('.show-route-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const routeName = this.getAttribute('data-route');
+                const routeCoords = routes[routeName];
+                
+                // Remove existing route if any
+                if (currentRoutePolyline) {
+                    map.removeLayer(currentRoutePolyline);
+                }
+                
+                // Draw new route
+                if (routeCoords) {
+                    currentRoutePolyline = L.polyline(routeCoords, {
+                        color: '#FF6B6B',
+                        weight: 5,
+                        opacity: 0.7,
+                        dashArray: '10, 10',
+                        lineCap: 'round'
+                    }).addTo(map);
+                    
+                    // Fit map to route bounds
+                    map.fitBounds(currentRoutePolyline.getBounds(), {
+                        padding: [50, 50]
+                    });
+                }
+            });
+        });
+        
+        // Populate the destination dropdowns
+        const fromSelect = document.getElementById('from-destination');
+        const toSelect = document.getElementById('to-destination');
+        
+        destinations.forEach(dest => {
+            const option = document.createElement('option');
+            option.value = dest.coords.join(',');
+            option.textContent = dest.name;
+            
+            fromSelect.appendChild(option.cloneNode(true));
+            toSelect.appendChild(option);
+        });
+        
+        // Route calculator
+        document.getElementById('calculate-route').addEventListener('click', function() {
+            // Get selected coordinates
+            const fromOption = fromSelect.options[fromSelect.selectedIndex];
+            const toOption = toSelect.options[toSelect.selectedIndex];
+            
+            let fromCoords;
+            if (fromOption.value === 'current') {
+                const coordsAttr = fromOption.getAttribute('data-coords');
+                if (!coordsAttr) {
+                    alert('Current location not found. Please click the locate button first.');
+                    return;
+                }
+                fromCoords = coordsAttr.split(',').map(Number);
+            } else {
+                if (!fromOption.value) { alert('Please select a starting point'); return; }
+                fromCoords = fromOption.value.split(',').map(Number);
+            }
+
+            if (!toOption.value) { alert('Please select a destination'); return; }
+            const toCoords = toOption.value.split(',').map(Number);
+
+            if (!fromCoords || fromCoords.length !== 2 || !toCoords || toCoords.length !== 2) {
+                alert('Invalid coordinates selected.');
+                return;
+            }
+
+            // Remove previous route drawing (polyline or routing control)
+            if (currentRoutePolyline) {
+                map.removeLayer(currentRoutePolyline);
+                currentRoutePolyline = null;
+            }
+            if (currentRouteControl) {
+                map.removeControl(currentRouteControl);
+                currentRouteControl = null;
+            }
+            
+            // --- Use Leaflet Routing Machine for Driving --- 
+            currentRouteControl = L.Routing.control({
+                waypoints: [
+                    L.latLng(fromCoords[0], fromCoords[1]),
+                    L.latLng(toCoords[0], toCoords[1])
+                ],
+                routeWhileDragging: false, // Optional: disable dragging waypoints
+                show: true, // Show the itinerary panel
+                lineOptions: {
+                    styles: [{color: '#4299e1', opacity: 0.8, weight: 6}]
+                },
+                createMarker: function() { return null; } // Don't create default markers, we might have our own
+            }).addTo(map);
+
+            // Add error handling for routing machine
+            currentRouteControl.on('routingerror', function(e) {
+                console.error("Routing Error:", e.error);
+                alert("Could not calculate driving route. " + e.error.message);
+                 // Clear results if routing fails
+                document.getElementById('route-result').classList.add('hidden');
+            });
+
+            // Get distance and time from the routing result
+            currentRouteControl.on('routesfound', function(e) {
+                const routes = e.routes;
+                if (routes.length > 0) {
+                    const summary = routes[0].summary;
+                    const distance = summary.totalDistance; // in meters
+                    const time = summary.totalTime; // in seconds
+                    
+                    document.getElementById('route-result').classList.remove('hidden');
+                    document.getElementById('route-distance').textContent = `${(distance / 1000).toFixed(1)} km`;
+                    document.getElementById('route-time').textContent = `${Math.round(time / 60)} min`;
+                    document.getElementById('route-transport').innerHTML = generateTransportOptions(distance / 1000, fromOption.text, toOption.text);
+                }
+            });
+            
+            // --- Old Direct Line Calculation (Keep for reference or remove) ---
+            /*
+            // Draw direct route between points
+            currentRoutePolyline = L.polyline([fromCoords, toCoords], {
+                color: '#4299e1',
+                weight: 4,
+                opacity: 0.8
+            }).addTo(map);
+            
+            // Fit map to route
+            map.fitBounds(currentRoutePolyline.getBounds(), {
+                padding: [50, 50]
+            });
+            
+            // Calculate approximate distance in km using Haversine formula
+            const lat1 = fromCoords[0] * Math.PI / 180;
+            const lat2 = toCoords[0] * Math.PI / 180;
+            const lon1 = fromCoords[1] * Math.PI / 180;
+            const lon2 = toCoords[1] * Math.PI / 180;
+            
+            const R = 6371; // Earth radius in km
+            const dLat = lat2 - lat1;
+            const dLon = lon2 - lon1;
+            
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1) * Math.cos(lat2) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+            
+            // Display results
+            document.getElementById('route-result').classList.remove('hidden');
+            document.getElementById('route-distance').textContent = `${Math.round(distance)} km (direct)`;
+            
+            // Generate multi-modal options
+            document.getElementById('route-transport').innerHTML = generateTransportOptions(distance, fromOption.text, toOption.text);
+            document.getElementById('route-time').textContent = `~${Math.round(distance/70)} hr (driving approx)`; // Very rough driving estimate
+            */
+        });
+        
+        // --- Helper Function for Transport Options ---
+        function generateTransportOptions(distanceKm, fromName, toName) {
+            let html = '<h4 class="font-medium mb-2">Other Transport Options:</h4><div class="space-y-3">';
+            const searchFromName = fromName.replace('📍 My Current Location', 'Current Location'); // Clean up name
+
+            // Driving (already shown by routing machine)
+            html += `<div><i class="fas fa-car fa-fw mr-2 text-blue-500"></i> <strong>Driving:</strong> Route shown on map.</div>`;
+            
+            // Train (Link to Indian Railways or search)
+            if (distanceKm > 50) { // Generally trains are for longer distances
+                 const trainUrl = `https://www.irctc.co.in/nget/train-search`; // Link to IRCTC main search
+                 // More specific link (example, might not work perfectly):
+                 // const trainUrl = `https://www.google.com/search?q=train+from+${encodeURIComponent(searchFromName)}+to+${encodeURIComponent(toName)}`; 
+                html += `
+                    <div>
+                        <i class="fas fa-train fa-fw mr-2 text-green-600"></i>
+                        <strong>Train:</strong> <span class="text-gray-600"> Approx. ${Math.round(distanceKm / 60)} - ${Math.round(distanceKm / 50)} hrs.</span>
+                        <a href="${trainUrl}" target="_blank" class="ml-2 inline-block bg-green-500 text-white text-xs px-2 py-1 rounded hover:bg-green-600 transition-colors">Check Schedule</a>
+                    </div>`;
+            }
+            
+            // Bus (Link to RedBus or similar)
+            if (distanceKm > 30) {
+                const busUrl = `https://www.redbus.in/bus-tickets?fromCityName=${encodeURIComponent(searchFromName)}&toCityName=${encodeURIComponent(toName)}`;
+                html += `
+                    <div>
+                        <i class="fas fa-bus fa-fw mr-2 text-red-500"></i>
+                        <strong>Bus:</strong> <span class="text-gray-600"> Approx. ${Math.round(distanceKm / 45)} - ${Math.round(distanceKm / 35)} hrs.</span>
+                        <a href="${busUrl}" target="_blank" class="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600 transition-colors">Find Buses</a>
+                    </div>`;
+            }
+
+            // Flight (Link to Google Flights or Skyscanner)
+            if (distanceKm > 300) { // Flights usually for longer distances
+                 const flightUrl = `https://www.google.com/flights?q=Flights+from+${encodeURIComponent(searchFromName)}+to+${encodeURIComponent(toName)}`;
+                html += `
+                    <div>
+                        <i class="fas fa-plane fa-fw mr-2 text-purple-600"></i>
+                        <strong>Flight:</strong> <span class="text-gray-600"> Approx. ${Math.round(distanceKm / 700 * 60)} - ${Math.round(distanceKm / 500 * 60)} min flight time.</span>
+                        <a href="${flightUrl}" target="_blank" class="ml-2 inline-block bg-purple-500 text-white text-xs px-2 py-1 rounded hover:bg-purple-600 transition-colors">Search Flights</a>
+                    </div>`;
+            }
+
+            html += '</div>';
+            return html;
+        }
+        // --- End Helper Function ---
+        
+        // Initialize mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Nearby Attractions Feature
+        // Populate the attraction destination dropdown
+        const attractionSelect = document.getElementById('attraction-destination');
+        destinations.forEach(dest => {
+            const option = document.createElement('option');
+            option.value = dest.coords.join(',');
+            option.textContent = dest.name;
+            option.setAttribute('data-name', dest.name);
+            
+            attractionSelect.appendChild(option);
+        });
+
+        // Find nearby attractions
+        let attractionMarkers = [];
+
+        document.getElementById('find-attractions').addEventListener('click', function() {
+            const coords = document.getElementById('attraction-destination').value.split(',').map(Number);
+            const place = document.getElementById('attraction-destination').options[document.getElementById('attraction-destination').selectedIndex].getAttribute('data-name');
+            const type = document.getElementById('attraction-type').value;
+            const radius = document.getElementById('attraction-radius').value * 1000; // convert km to meters
+            
+            if (!coords[0]) {
+                alert('Please select a destination first');
+                return;
+            }
+            
+            // Placeholder for real API call - in a production environment, you would call an actual API
+            // Mock data for demonstration purposes
+            const mockAttractions = generateMockAttractions(coords, type, place);
+            
+            displayAttractions(mockAttractions);
+        });
+
+        function generateMockAttractions(coords, type, place) {
+            // This generates fake attraction data for demonstration
+            // In a production site, you would use Google Places API or similar
+            const attractions = [];
+            const types = {
+                'tourist_attraction': 'Tourist Attractions',
+                'restaurant': 'Restaurants',
+                'hotel': 'Hotels',
+                'museum': 'Museums',
+                'shopping_mall': 'Shopping Centers'
+            };
+            
+            // Generate between 5-10 fake attractions
+            const count = Math.floor(Math.random() * 6) + 5;
+            
+            for (let i = 0; i < count; i++) {
+                // Generate a point within ~10km of the center
+                const lat = coords[0] + (Math.random() - 0.5) * 0.1;
+                const lng = coords[1] + (Math.random() - 0.5) * 0.1;
+                
+                const names = {
+                    'tourist_attraction': [`${place} Fort`, `${place} Palace`, `Ancient Temple`, `${place} Gardens`, `${place} Monument`, `${place} Viewpoint`, `Lake View`, `Heritage Site`],
+                    'restaurant': [`Spice Garden`, `Royal Flavors`, `${place} Delight`, `Curry House`, `Indian Fusion`, `Maharaja's Kitchen`, `Tandoori Express`],
+                    'hotel': [`${place} Grand Hotel`, `Royal Palace Stay`, `Heritage Inn`, `Luxury Suites ${place}`, `${place} Comfort Inn`, `Taj View Hotel`],
+                    'museum': [`${place} History Museum`, `Cultural Heritage Center`, `Art Gallery of ${place}`, `Archaeological Museum`, `Folk Museum`],
+                    'shopping_mall': [`${place} City Center`, `Heritage Bazaar`, `Royal Shopping Mall`, `${place} Market`, `Artisan's Mall`]
+                };
+                
+                const reviews = [4.2, 4.3, 4.5, 4.7, 4.8, 4.9, 5.0];
+                
+                attractions.push({
+                    name: names[type][Math.floor(Math.random() * names[type].length)],
+                    coords: [lat, lng],
+                    rating: reviews[Math.floor(Math.random() * reviews.length)],
+                    type: types[type]
+                });
+            }
+            
+            return attractions;
+        }
+
+        function displayAttractions(attractions) {
+            // Clear previous markers
+            attractionMarkers.forEach(marker => map.removeLayer(marker));
+            attractionMarkers = [];
+            
+            // Display the attractions list
+            const attractionsList = document.getElementById('attractions-list');
+            attractionsList.innerHTML = '';
+            
+            attractions.forEach(attraction => {
+                // Add to the list
+                const listItem = document.createElement('div');
+                listItem.className = 'attraction-item py-3';
+                listItem.innerHTML = `
+                    <div class="flex justify-between">
+                        <h4 class="font-medium">${attraction.name}</h4>
+                        <span class="text-yellow-500">${attraction.rating} ★</span>
+                    </div>
+                    <p class="text-sm text-gray-600">${attraction.type}</p>
+                `;
+                attractionsList.appendChild(listItem);
+                
+                // Create a marker for later use
+                const marker = L.marker(attraction.coords)
+                    .bindPopup(`
+                        <div>
+                            <h3 class="font-bold">${attraction.name}</h3>
+                            <p>${attraction.type}</p>
+                            <p class="text-yellow-500">${attraction.rating} ★</p>
+                        </div>
+                    `);
+                
+                attractionMarkers.push(marker);
+            });
+            
+            // Show the results container
+            document.getElementById('attractions-results').classList.remove('hidden');
+            
+            // Set up the show on map button
+            document.getElementById('show-attractions-map').addEventListener('click', function() {
+                // Clear any existing routes
+                if (currentRoutePolyline) {
+                    map.removeLayer(currentRoutePolyline);
+                }
+                
+                // Add all attraction markers to the map
+                attractionMarkers.forEach(marker => map.addLayer(marker));
+                
+                // Create a group for all markers to fit bounds
+                const group = L.featureGroup(attractionMarkers);
+                map.fitBounds(group.getBounds(), { padding: [50, 50] });
+                
+                // Scroll to the map
+                document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // --- Check for and Draw Itinerary Route from Planner ---
+        function drawPlannerRoute() {
+            const routeData = localStorage.getItem('itineraryRouteData');
+            if (routeData) {
+                try {
+                    const routeCoords = JSON.parse(routeData);
+                    if (Array.isArray(routeCoords) && routeCoords.length >= 2) {
+                        // Remove existing route if any (e.g., if a popular route was clicked before)
+                        if (currentRoutePolyline) {
+                             map.removeLayer(currentRoutePolyline);
+                        }
+
+                        // Draw the itinerary route
+                        currentRoutePolyline = L.polyline(routeCoords, {
+                            color: '#8b5cf6', // Purple color for planner route
+                            weight: 6,
+                            opacity: 0.8,
+                            dashArray: '5, 10'
+                        }).addTo(map);
+
+                        // Fit map to the route bounds
+                        map.fitBounds(currentRoutePolyline.getBounds(), {
+                            padding: [60, 60] // Slightly more padding
+                        });
+
+                        console.log("Drawing planner route:", routeCoords);
+                    } else {
+                        console.warn("Invalid route data found in localStorage.");
+                    }
+                } catch (error) {
+                    console.error("Error parsing route data from localStorage:", error);
+                }
+                
+                // IMPORTANT: Clear the data from localStorage after drawing
+                localStorage.removeItem('itineraryRouteData');
+            }
+        }
+
+        // --- Check for and Handle Find Nearby Request from Planner ---
+        function handleFindNearbyRequest() {
+            const nearbyCoordsString = localStorage.getItem('findNearbyLocation');
+            if (nearbyCoordsString) {
+                try {
+                    const nearbyCoords = nearbyCoordsString.split(',').map(Number);
+                    if (nearbyCoords.length === 2) {
+                        // Find the destination name based on coords for dropdown selection
+                        const targetDestination = destinations.find(dest => 
+                            dest.coords[0] === nearbyCoords[0] && dest.coords[1] === nearbyCoords[1]
+                        );
+
+                        if (targetDestination) {
+                            const attractionSelect = document.getElementById('attraction-destination');
+                            const findButton = document.getElementById('find-attractions');
+                            
+                            // Select the destination in the dropdown
+                            attractionSelect.value = nearbyCoordsString; // Use the coord string as value
+
+                            // Trigger the find attractions logic
+                            if (findButton) {
+                                findButton.click(); 
+                            }
+                            
+                            // Center map on the location
+                            map.setView(nearbyCoords, 13); // Zoom in closer (e.g., zoom level 13)
+
+                             console.log("Handling Find Nearby request for:", targetDestination.name);
+                        } else {
+                             console.warn("Could not find matching destination for nearby coords:", nearbyCoords);
+                        }
+                    } else {
+                         console.warn("Invalid nearby location data found in localStorage.");
+                    }
+                } catch (error) {
+                    console.error("Error processing nearby location data:", error);
+                }
+                
+                // IMPORTANT: Clear the data from localStorage after processing
+                localStorage.removeItem('findNearbyLocation');
+            }
+        }
+
+        // --- Initializations ---
+        // Set the "All Destinations" button as active by default
+        document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+        // Initialize mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Draw planner route *OR* Handle find nearby request (handle nearby first)
+        handleFindNearbyRequest(); // Check for nearby request first
+        drawPlannerRoute(); // Then check for route drawing request
+    </script>
+
+    <!-- Chatbot Button -->
+    <button type="button" id="chat-toggle-button" class="fixed bottom-5 right-5 bg-primary hover:bg-opacity-90 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-[1010] transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        <i class="fas fa-comments text-2xl"></i>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="chat-window" class="hidden fixed bottom-20 right-5 w-full max-w-sm sm:w-80 h-[65vh] sm:h-96 bg-white rounded-lg shadow-xl z-[1020] flex flex-col overflow-hidden border border-gray-200">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-primary to-blue-600 text-white p-3 flex justify-between items-center shadow-sm">
+             <div class="flex items-center gap-2">
+                 <!-- Icon background white, icon color blue-800 -->
+                 <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white text-blue-800 shadow-inner">
+                    <i class="fas fa-robot text-base"></i> 
+                 </span>
+                 <h3 class="font-semibold text-base">Travel Assistant</h3>
+             </div>
+            <button id="chat-close-button" class="text-white hover:text-gray-200 focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <!-- Messages -->
+        <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50">
+            <!-- Messages will be added here -->
+             <div class="chat-bubble bot"><p>Welcome! How can I help you plan your India trip today?</p></div>
+        </div>
+        <!-- Input -->
+        <div class="p-3 border-t border-gray-200 bg-white">
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="Ask anything..." class="flex-grow px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary shadow-sm">
+                <button type="submit" class="bg-primary hover:bg-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary shadow-sm transition-colors">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Chat Script -->
+    <script src="js/chat.js"></script>
+</body>
+</html> 

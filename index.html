@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeshaAnubhava - Your Ultimate Travel Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Cover page redirect script -->
+    <script>
+        // Check if the user is coming directly to the index page
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check if user has seen the cover page
+            if (!sessionStorage.getItem('coverpageViewed')) {
+                // If not, redirect to cover page
+                window.location.href = 'cover.html';
+            }
+            // Mark that user has seen the home page during this session
+            sessionStorage.setItem('indexViewed', 'true');
+        });
+    </script>
+</head>
+<body class="font-sans text-dark bg-light">
+    <!-- Header -->
+    <header class="bg-white shadow-md fixed w-full z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-display font-bold text-primary">
+                        Desha<span class="text-secondary">Anubhava</span>
+                    </a>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="destinations.html" class="font-medium hover:text-primary transition-colors">Destinations</a>
+                    <a href="experiences.html" class="font-medium hover:text-primary transition-colors">Experiences</a>
+                    <a href="events.html" class="font-medium hover:text-primary transition-colors">Events</a>
+                    <a href="map.html" class="font-medium hover:text-primary transition-colors">Interactive Map</a>
+                    <a href="planner.html" class="font-medium hover:text-primary transition-colors">Trip Planner</a>
+                    <a href="stories.html" class="font-medium hover:text-primary transition-colors">Traveler Stories</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-dark focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white w-full py-4 px-6 shadow-lg">
+            <nav class="flex flex-col space-y-4">
+                <a href="destinations.html" class="font-medium hover:text-primary transition-colors">Destinations</a>
+                <a href="experiences.html" class="font-medium hover:text-primary transition-colors">Experiences</a>
+                <a href="events.html" class="font-medium hover:text-primary transition-colors">Events</a>
+                <a href="map.html" class="font-medium hover:text-primary transition-colors">Interactive Map</a>
+                <a href="planner.html" class="font-medium hover:text-primary transition-colors">Trip Planner</a>
+                <a href="stories.html" class="font-medium hover:text-primary transition-colors">Traveler Stories</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section h-auto py-24 flex items-center justify-center bg-gray-100 text-dark">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-display font-bold mb-8">Hi! How can we help You?</h1> 
+            
+            <!-- New Search Form -->
+            <form id="hero-search-form" class="relative max-w-2xl mx-auto mb-10">
+                <label for="hero-search-input" class="sr-only">Search</label> 
+                <input type="text" id="hero-search-input" placeholder="Search destinations, experiences, events..." 
+                       class="w-full px-5 py-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm text-lg pr-16" 
+                       autocomplete="off">
+                <button type="submit" id="hero-search-button" aria-label="Search" class="absolute inset-y-0 right-0 flex items-center justify-center w-16 text-white bg-primary hover:bg-opacity-90 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">
+                    <i class="fas fa-search text-xl"></i>
+                </button>
+                 <!-- Autocomplete Suggestions Container -->
+                 <div id="hero-suggestions" class="hidden absolute left-0 right-0 mt-1 bg-white rounded-b-lg shadow-lg z-20 overflow-hidden text-left"></div>
+            </form>
+            
+            <!-- Category Links -->
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-4 max-w-3xl mx-auto">
+                <a href="destinations.html" class="category-link group block bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-primary transition-all duration-200">
+                    <i class="fas fa-map-marked-alt text-3xl text-primary mb-2 inline-block"></i>
+                    <span class="block text-sm font-medium text-gray-700 group-hover:text-primary">Destinations</span>
+                </a>
+                <a href="experiences.html" class="category-link group block bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-primary transition-all duration-200">
+                    <i class="fas fa-hiking text-3xl text-primary mb-2 inline-block"></i>
+                    <span class="block text-sm font-medium text-gray-700 group-hover:text-primary">Experiences</span>
+                </a>
+                <a href="events.html" class="category-link group block bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-primary transition-all duration-200">
+                    <i class="fas fa-calendar-alt text-3xl text-primary mb-2 inline-block"></i>
+                    <span class="block text-sm font-medium text-gray-700 group-hover:text-primary">Events</span>
+                </a>
+                 <a href="map.html" class="category-link group block bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-primary transition-all duration-200">
+                    <i class="fas fa-map-signs text-3xl text-primary mb-2 inline-block"></i>
+                    <span class="block text-sm font-medium text-gray-700 group-hover:text-primary">Map</span>
+                </a>
+                 <a href="planner.html" class="category-link group block bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-primary transition-all duration-200">
+                    <i class="fas fa-clipboard-list text-3xl text-primary mb-2 inline-block"></i>
+                    <span class="block text-sm font-medium text-gray-700 group-hover:text-primary">Planner</span>
+                </a>
+                 <a href="stories.html" class="category-link group block bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-primary transition-all duration-200">
+                    <i class="fas fa-book-open text-3xl text-primary mb-2 inline-block"></i>
+                    <span class="block text-sm font-medium text-gray-700 group-hover:text-primary">Stories</span>
+                </a>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Featured Destinations -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold mb-2 text-center">Featured Destinations</h2>
+            <p class="text-xl text-center mb-12 text-gray-600">Discover India's most iconic places</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Destination Card 1 -->
+                <div class="destination-card rounded-xl overflow-hidden shadow-lg custom-transition">
+                    <img src="images/tajmahal.jpg" alt="Taj Mahal" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Taj Mahal, Agra</h3>
+                        <p class="text-gray-600 mb-4">Experience the breathtaking marble mausoleum and symbol of eternal love.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">North India</span>
+                            <a href="destinations.html#tajmahal" class="text-primary font-medium hover:underline">Explore More →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Destination Card 2 -->
+                <div class="destination-card rounded-xl overflow-hidden shadow-lg custom-transition">
+                    <img src="images/varanasi.jpg" alt="Varanasi" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Varanasi</h3>
+                        <p class="text-gray-600 mb-4">Discover one of the world's oldest living cities and spiritual capital of India.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">North India</span>
+                            <a href="destinations.html#varanasi" class="text-primary font-medium hover:underline">Explore More →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Destination Card 3 -->
+                <div class="destination-card rounded-xl overflow-hidden shadow-lg custom-transition">
+                    <img src="images/kerala backwater.jpg" alt="Kerala Backwaters" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Kerala Backwaters</h3>
+                        <p class="text-gray-600 mb-4">Float through tranquil palm-lined canals in God's Own Country.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-gray-500">South India</span>
+                            <a href="destinations.html#kerala" class="text-primary font-medium hover:underline">Explore More →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="destinations.html" class="inline-block bg-primary hover:bg-opacity-90 text-white font-medium px-8 py-3 rounded-lg transition-colors">View All Destinations</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiences Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold mb-2 text-center">Unforgettable Experiences</h2>
+            <p class="text-xl text-center mb-12 text-gray-600">Discover India's diverse experiences</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Experience 1 -->
+                <a href="experiences.html#adventure" class="group block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg custom-transition">
+                    <div class="h-48 relative overflow-hidden">
+                        <img src="images/himalaya treak.jpg" alt="Himalayan trekking" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex items-center justify-center">
+                            <i class="fas fa-mountain text-white text-4xl drop-shadow-lg"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary custom-transition">Adventure</h3>
+                        <p class="text-gray-600">Himalayan treks and thrilling outdoor activities</p>
+                    </div>
+                </a>
+                
+                <!-- Experience 2 -->
+                <a href="experiences.html#culture" class="group block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg custom-transition">
+                    <div class="h-48 relative overflow-hidden">
+                        <img src="images/Ancient temples.jpg" alt="Ancient temples in India" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex items-center justify-center">
+                            <i class="fas fa-theater-masks text-white text-4xl drop-shadow-lg"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary custom-transition">Culture & Arts</h3>
+                        <p class="text-gray-600">Temples, dance, music, and ancient traditions</p>
+                    </div>
+                </a>
+                
+                <!-- Experience 3 -->
+                <a href="experiences.html#food" class="group block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg custom-transition">
+                    <div class="h-48 relative overflow-hidden">
+                        <img src="https://source.unsplash.com/nBtuyJj-LS8" alt="Indian cuisine" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex items-center justify-center">
+                            <i class="fas fa-utensils text-white text-4xl drop-shadow-lg"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary custom-transition">Food & Drink</h3>
+                        <p class="text-gray-600">Regional cuisines and culinary delights</p>
+                    </div>
+                </a>
+                
+                <!-- Experience 4 -->
+                <a href="experiences.html#wellness" class="group block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg custom-transition">
+                    <div class="h-48 relative overflow-hidden">
+                        <img src="images/Yoga retreats.jpg" alt="Yoga retreats in India" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex items-center justify-center">
+                            <i class="fas fa-spa text-white text-4xl drop-shadow-lg"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2 group-hover:text-primary custom-transition">Wellness</h3>
+                        <p class="text-gray-600">Yoga, Ayurveda, and spiritual rejuvenation</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Virtual Tours -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold mb-2 text-center">Experience India Virtually</h2>
+            <p class="text-xl text-center mb-12 text-gray-600">Immerse yourself with 360° tours</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Tour 1 -->
+                <div class="rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="images/tajmahal.jpg" alt="Taj Mahal" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                            <button class="bg-white bg-opacity-25 hover:bg-opacity-40 rounded-full w-16 h-16 flex items-center justify-center custom-transition">
+                                <i class="fas fa-play text-white text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Taj Mahal</h3>
+                        <p class="text-gray-600">Walk through this magnificent marble monument and UNESCO World Heritage site</p>
+                    </div>
+                </div>
+                
+                <!-- Tour 2 -->
+                <div class="rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="images/Darjeeling.jpg" alt="Darjeeling" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                            <button class="bg-white bg-opacity-25 hover:bg-opacity-40 rounded-full w-16 h-16 flex items-center justify-center custom-transition">
+                                <i class="fas fa-play text-white text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Darjeeling Hills</h3>
+                        <p class="text-gray-600">Tour the breathtaking tea gardens and mountain views of this hill station</p>
+                    </div>
+                </div>
+                
+                <!-- Tour 3 -->
+                <div class="rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img src="images/Goa.jpg" alt="Goa" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                            <button class="bg-white bg-opacity-25 hover:bg-opacity-40 rounded-full w-16 h-16 flex items-center justify-center custom-transition">
+                                <i class="fas fa-play text-white text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Goa Beaches</h3>
+                        <p class="text-gray-600">Explore the beautiful coastlines and Portuguese heritage of India's beach paradise</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trip Planning -->
+    <section class="py-16 bg-primary text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-12">
+                    <h2 class="text-3xl font-display font-bold mb-4">Plan Your Perfect India Trip</h2>
+                    <p class="text-lg mb-6">Our interactive trip planner helps you create your ideal itinerary, find hidden gems, and make the most of your Indian adventure.</p>
+                    <ul class="mb-8 space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-3 text-secondary"></i>
+                            <span>Customized itineraries based on your interests</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-3 text-secondary"></i>
+                            <span>Local tips and travel recommendations</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-3 text-secondary"></i>
+                            <span>Interactive maps with points of interest</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-3 text-secondary"></i>
+                            <span>Visa and travel requirement assistance</span>
+                        </li>
+                    </ul>
+                    <a href="planner.html" class="inline-block bg-white text-primary hover:bg-gray-100 font-medium px-8 py-3 rounded-lg transition-colors">Start Planning</a>
+                </div>
+                <div class="md:w-1/2">
+                    <img src="images/kerala backwater.jpg" alt="Trip Planning" class="rounded-xl shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Traveler Stories -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold mb-2 text-center">Traveler Stories</h2>
+            <p class="text-xl text-center mb-12 text-gray-600">Authentic experiences from fellow explorers</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Story 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md">
+                    <img src="images/tajmahal.jpg" alt="Taj Mahal" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="images/tajmahal.jpg" alt="Sarah Johnson" class="w-10 h-10 rounded-full mr-4 object-cover">
+                            <div>
+                                <h4 class="font-bold">Sarah Johnson</h4>
+                                <p class="text-sm text-gray-500">Golden Triangle Tour</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">"The colors, sounds, and history of Delhi, Agra, and Jaipur were absolutely mesmerizing. The Taj Mahal at sunrise was a life-changing moment!"</p>
+                        <a href="stories.html#sarah" class="text-primary font-medium hover:underline">Read Full Story →</a>
+                    </div>
+                </div>
+                
+                <!-- Story 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md">
+                    <img src="images/varanasi.jpg" alt="Varanasi" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="images/varanasi.jpg" alt="Mike Chen" class="w-10 h-10 rounded-full mr-4 object-cover">
+                            <div>
+                                <h4 class="font-bold">Mike Chen</h4>
+                                <p class="text-sm text-gray-500">Spiritual Journey</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">"Witnessing the evening Ganga Aarti in Varanasi was the most profound spiritual experience of my life. The energy was indescribable!"</p>
+                        <a href="stories.html#mike" class="text-primary font-medium hover:underline">Read Full Story →</a>
+                    </div>
+                </div>
+                
+                <!-- Story 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md">
+                    <img src="images/kerala backwater.jpg" alt="Kerala" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="images/kerala backwater.jpg" alt="Elena Gomez" class="w-10 h-10 rounded-full mr-4 object-cover">
+                            <div>
+                                <h4 class="font-bold">Elena Gomez</h4>
+                                <p class="text-sm text-gray-500">Kerala Adventure</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">"Drifting through the serene Kerala backwaters on a traditional houseboat while eating delicious local cuisine was pure bliss!"</p>
+                        <a href="stories.html#elena" class="text-primary font-medium hover:underline">Read Full Story →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="stories.html" class="inline-block bg-primary hover:bg-opacity-90 text-white font-medium px-8 py-3 rounded-lg transition-colors">View All Stories</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 bg-dark text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-display font-bold mb-4">Stay Inspired</h2>
+            <p class="text-lg mb-8 max-w-2xl mx-auto">Subscribe to our newsletter for travel tips, destination highlights, and exclusive offers.</p>
+            <div class="max-w-lg mx-auto">
+                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary text-dark">
+                    <button class="bg-secondary hover:bg-opacity-90 text-white font-medium px-6 py-3 rounded-lg transition-colors">Subscribe</button>
+                </div>
+                <p class="text-sm text-gray-400 mt-4">By subscribing, you agree to our Privacy Policy and consent to receive updates.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">ExploreIndia</h3>
+                    <p class="text-gray-400 mb-6">Your ultimate guide to experiencing India. Discover destinations, plan your trip, and create unforgettable memories.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="destinations.html" class="text-gray-400 hover:text-white transition-colors">Destinations</a></li>
+                        <li><a href="experiences.html" class="text-gray-400 hover:text-white transition-colors">Experiences</a></li>
+                        <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
+                        <li><a href="planner.html" class="text-gray-400 hover:text-white transition-colors">Trip Planner</a></li>
+                        <li><a href="stories.html" class="text-gray-400 hover:text-white transition-colors">Traveler Stories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Travel Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Visa Information</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Weather Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Safety Guidelines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">COVID-19 Updates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3"></i>
+                            <span>123 Tourism Street, New Delhi, India</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3"></i>
+                            <span>info@exploreindia.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 mb-4 md:mb-0">&copy; 2023 ExploreIndia. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Accessibility</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button onclick="topFunction()" id="backToTopBtn" title="Go to top" 
+            class="hidden fixed bottom-5 right-24 bg-secondary hover:bg-opacity-90 text-white p-3 rounded-full shadow-lg transition-opacity duration-300 focus:outline-none">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Chatbot Button -->
+    <button type="button" id="chat-toggle-button" class="fixed bottom-5 right-5 bg-primary hover:bg-opacity-90 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-30 transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        <i class="fas fa-comments text-2xl"></i>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="chat-window" class="hidden fixed bottom-20 right-5 w-full max-w-sm sm:w-80 h-[65vh] sm:h-96 bg-white rounded-lg shadow-xl z-40 flex flex-col overflow-hidden border border-gray-200">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-primary to-blue-600 text-white p-3 flex justify-between items-center shadow-sm">
+             <div class="flex items-center gap-2">
+                 <!-- Icon background white, icon color blue-800 -->
+                 <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white text-blue-800 shadow-inner">
+                    <i class="fas fa-robot text-base"></i> 
+                 </span>
+                 <h3 class="font-semibold text-base">Travel Assistant</h3>
+             </div>
+            <button id="chat-close-button" class="text-white hover:text-gray-200 focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <!-- Messages -->
+        <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50">
+            <!-- Messages will be added here -->
+             <div class="chat-bubble bot"><p>Welcome! How can I help you plan your India trip today?</p></div>
+        </div>
+        <!-- Input -->
+        <div class="p-3 border-t border-gray-200 bg-white">
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="Ask anything..." class="flex-grow px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary shadow-sm">
+                <button type="submit" class="bg-primary hover:bg-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary shadow-sm transition-colors">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script for Mobile Menu Toggle -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Back to Top Button Logic
+        let backToTopButton = document.getElementById("backToTopBtn");
+
+        // When the user scrolls down 200px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+          if (backToTopButton) { // Check if button exists
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+              backToTopButton.style.display = "block";
+            } else {
+              backToTopButton.style.display = "none";
+            }
+          }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+          document.body.scrollTop = 0; // For Safari
+          document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    
+    <!-- Chat Feature -->
+    <script src="js/chat.js"></script>
+</body>
+</html> 

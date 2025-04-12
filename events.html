@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural Events & Festivals - Explore India</title>
+    <!-- Add preconnect hints for external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <!-- Load fonts with display swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <!-- Replace old Font Awesome with new CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Add modern UI libraries -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        /* Additional styles for new images */
+        .event-card-image {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+        /* Timeline Styles */
+        #timeline-container {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        #timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--primary-color), transparent);
+        }
+
+        .timeline-event {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 1rem;
+            height: 1rem;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Month View Styles */
+        .month-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .month-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .month-day:hover {
+            background-color: var(--primary-color-light);
+        }
+
+        .month-day.has-event {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Toggle Button Styles */
+        .toggle-container {
+            display: flex;
+            padding: 0.25rem;
+            background-color: #f3f4f6;
+            border-radius: 0.75rem;
+            position: relative;
+            width: 200px;
+        }
+
+        .toggle-button {
+            position: relative;
+            z-index: 10;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 50%;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .toggle-indicator {
+            position: absolute;
+            left: 0.25rem;
+            top: 0.25rem;
+            width: calc(50% - 0.5rem);
+            height: calc(100% - 0.5rem);
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-indicator.month {
+            transform: translateX(100%);
+        }
+
+        .active {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="font-sans text-dark bg-light">
+    <!-- Header with modern glassmorphism -->
+    <header class="bg-white/80 backdrop-blur-md shadow-md fixed w-full z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-display font-bold text-primary hover:scale-105 transition-transform">
+                        Explore<span class="text-secondary">India</span>
+                    </a>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="destinations.html" class="font-medium hover:text-primary transition-colors">Destinations</a>
+                    <a href="experiences.html" class="font-medium hover:text-primary transition-colors">Experiences</a>
+                    <a href="events.html" class="font-medium text-primary">Events</a>
+                    <a href="planner.html" class="font-medium hover:text-primary transition-colors">Trip Planner</a>
+                    <a href="stories.html" class="font-medium hover:text-primary transition-colors">Traveler Stories</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-dark focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu with modern animation -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white/90 backdrop-blur-md w-full py-4 px-6 shadow-lg transform transition-transform duration-300">
+            <nav class="flex flex-col space-y-4">
+                <a href="destinations.html" class="font-medium hover:text-primary transition-colors">Destinations</a>
+                <a href="experiences.html" class="font-medium hover:text-primary transition-colors">Experiences</a>
+                <a href="events.html" class="font-medium text-primary">Events</a>
+                <a href="planner.html" class="font-medium hover:text-primary transition-colors">Trip Planner</a>
+                <a href="stories.html" class="font-medium hover:text-primary transition-colors">Traveler Stories</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Modern Hero Section with Parallax -->
+    <section class="relative h-screen">
+        <div class="absolute inset-0">
+            <img src="https://images.pexels.com/photos/932263/pexels-photo-932263.jpeg" alt="Indian Festival" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/40"></div>
+        </div>
+        <div class="relative h-full flex items-center justify-center px-4 text-center">
+            <div class="max-w-4xl" data-aos="fade-up">
+                <h1 class="text-5xl md:text-7xl font-display font-bold text-white mb-6">Indian Festivals & Cultural Events</h1>
+                <p class="text-xl md:text-2xl text-white mb-8">Experience the vibrant celebrations that bring India's heritage to life</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#calendar" class="bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105">View Calendar</a>
+                    <a href="#featured" class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105">Featured Events</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add this section after the hero section and before the events section -->
+    <section class="py-12 bg-gradient-to-r from-purple-50 to-indigo-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Cultural Context Examples</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Diwali Greetings</h3>
+                    <p class="text-gray-600 mb-4">Try changing the language and formality level to see how the greeting adapts:</p>
+                    <div class="p-4 bg-purple-50 rounded-lg">
+                        <p class="text-lg font-medium" id="diwali-greeting">Wishing you a sparkling Diwali!</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Holi Celebration</h3>
+                    <p class="text-gray-600 mb-4">Experience how cultural context affects the translation:</p>
+                    <div class="p-4 bg-pink-50 rounded-lg">
+                        <p class="text-lg font-medium" id="holi-greeting">Let's play with colors!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Calendar with Modern UI -->
+    <section id="calendar" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-display font-bold mb-4 text-center" data-aos="fade-up">Upcoming Festivals 2025</h2>
+            <p class="text-xl text-center mb-16 text-gray-600" data-aos="fade-up">Plan your trip around these magnificent celebrations</p>
+            
+            <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-8" data-aos="fade-up">
+                <!-- Calendar Navigation -->
+                <div class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center space-x-4">
+                        <h3 class="text-2xl font-bold">2025 Festival Calendar</h3>
+                        <div class="toggle-container">
+                            <button id="timeline-view" class="toggle-button">Timeline</button>
+                            <button id="month-view" class="toggle-button">Month</button>
+                            <div id="toggle-indicator" class="toggle-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="prev-month" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="current-month" class="text-lg font-semibold">February 2025</span>
+                        <button id="next-month" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Timeline View -->
+                <div id="timeline-container" class="relative">
+                    <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-transparent via-primary to-transparent"></div>
+                    
+                    <!-- Timeline Events -->
+                    <div class="space-y-12">
+                        <!-- January Event -->
+                        <div class="relative flex items-center" data-aos="fade-right">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/pongal festival.jpg" alt="Pongal Festival" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Pongal Festival</h4>
+                                    <p class="text-gray-600 mb-2">January 15, 2025</p>
+                                    <p class="text-gray-600 mb-4">Celebrate the harvest festival of Tamil Nadu with traditional rituals and feasts.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+
+                        <!-- February Event -->
+                        <div class="relative flex items-center" data-aos="fade-left">
+                            <div class="w-1/2 pr-8"></div>
+                            <div class="w-1/2 pl-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/India Art Fair 2025.png" alt="India Art Fair" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">India Art Fair</h4>
+                                    <p class="text-gray-600 mb-2">February 15-18, 2025</p>
+                                    <p class="text-gray-600 mb-4">India's largest modern and contemporary art fair featuring digital art and immersive experiences.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- March Event -->
+                        <div class="relative flex items-center" data-aos="fade-right">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/holi festival.jpg" alt="Holi Festival" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Holi Festival</h4>
+                                    <p class="text-gray-600 mb-2">March 14, 2025</p>
+                                    <p class="text-gray-600 mb-4">Experience India's most colorful festival with eco-friendly colors and sustainable celebrations.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+                        
+                        <!-- April Event -->
+                        <div class="relative flex items-center" data-aos="fade-left">
+                            <div class="w-1/2 pr-8"></div>
+                            <div class="w-1/2 pl-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/Baisakhi Festival.jpg" alt="Baisakhi Festival" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Baisakhi Festival</h4>
+                                    <p class="text-gray-600 mb-2">April 13, 2025</p>
+                                    <p class="text-gray-600 mb-4">Celebrate the harvest festival of Punjab with traditional music, dance, and community feasts.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- August Event -->
+                        <div class="relative flex items-center" data-aos="fade-right">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/Raksha Bandhan.jpg" alt="Raksha Bandhan" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Raksha Bandhan</h4>
+                                    <p class="text-gray-600 mb-2">August 12, 2025</p>
+                                    <p class="text-gray-600 mb-4">Celebrate the bond between siblings with traditional rituals and modern celebrations.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+
+                        <!-- October Event -->
+                        <div class="relative flex items-center" data-aos="fade-left">
+                            <div class="w-1/2 pr-8"></div>
+                            <div class="w-1/2 pl-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/Durga Puja.jpg" alt="Durga Puja" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Durga Puja</h4>
+                                    <p class="text-gray-600 mb-2">October 6-10, 2025</p>
+                                    <p class="text-gray-600 mb-4">Experience the grand celebration of Goddess Durga with artistic pandals and cultural performances.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- November Event -->
+                        <div class="relative flex items-center" data-aos="fade-right">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow" data-category="religious">
+                                    <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/Diwali Festival.jpg" alt="Diwali Festival" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Diwali Festival</h4>
+                                    <p class="text-gray-600 mb-2">November 12, 2025</p>
+                                    <p class="text-gray-600 mb-4">Celebrate the triumph of light over darkness with sustainable lighting and eco-friendly celebrations.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+
+                        <!-- New November Film Event -->
+                        <div class="relative flex items-center" data-aos="fade-left">
+                            <div class="w-1/2 pr-8"></div>
+                            <div class="w-1/2 pl-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow" data-category="media">
+                                    <div class="absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/mumbai_film_festival.jpg" alt="Mumbai Film Festival" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Mumbai Film Festival</h4>
+                                    <p class="text-gray-600 mb-2">November 20-27, 2025</p>
+                                    <p class="text-gray-600 mb-4">Showcasing independent Indian cinema and world films, with a focus on digital storytelling.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- December Event -->
+                        <div class="relative flex items-center" data-aos="fade-right">
+                            <div class="w-1/2 pr-8 text-right">
+                                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow" data-category="religious">
+                                    <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-primary rounded-full"></div>
+                                    <div class="relative h-48 w-full mb-4 rounded-xl overflow-hidden">
+                                        <img src="images/Christmas in India.jpg" alt="Christmas in India" class="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-110">
+                                    </div>
+                                    <h4 class="text-xl font-bold mb-2">Christmas in India</h4>
+                                    <p class="text-gray-600 mb-2">December 25, 2025</p>
+                                    <p class="text-gray-600 mb-4">Experience the unique blend of Indian and Western traditions during Christmas celebrations.</p>
+                                    <a href="#" class="text-primary font-medium hover:underline mt-4 inline-block">View Details →</a>
+                                </div>
+                            </div>
+                            <div class="w-1/2 pl-8"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Month View (Hidden by default) -->
+                <div id="month-container" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Event Cards (Same as before) -->
+                        <!-- ... existing event cards ... -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Events Section -->
+    <section id="featured" class="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-display font-bold mb-4 text-center" data-aos="fade-up">Featured Events 2025</h2>
+            <p class="text-xl text-center mb-16 text-gray-600" data-aos="fade-up">Don't miss these extraordinary celebrations</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                <!-- Featured Event 1 -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-1" data-aos="fade-up">
+                    <div class="relative h-64">
+                        <img src="images/holi festival.jpg" alt="Holi Festival" class="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 hover:scale-110">
+                        <div class="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md">
+                            March 14, 2025
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                            <h3 class="text-2xl font-bold text-white">Holi Festival</h3>
+                            <p class="text-white/90">Experience the festival of colors with eco-friendly celebrations</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">Nationwide</span>
+                            <span class="text-sm text-primary font-medium">Featured</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Join millions in celebrating India's most colorful festival with sustainable practices and modern eco-friendly colors.</p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-primary font-medium hover:underline">Learn More →</a>
+                            <button class="bg-primary text-white px-4 py-2 rounded-full hover:bg-primary-dark transition-colors">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Featured Event 2 -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative h-64">
+                        <img src="images/India Art Fair 2025.png" alt="India Art Fair" class="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 hover:scale-110">
+                        <div class="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md">
+                            Feb 15-18, 2025
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                            <h3 class="text-2xl font-bold text-white">India Art Fair</h3>
+                            <p class="text-white/90">Asia's largest modern and contemporary art fair</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">New Delhi</span>
+                            <span class="text-sm text-primary font-medium">Featured</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Experience cutting-edge contemporary art with immersive digital installations and interactive exhibits.</p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-primary font-medium hover:underline">Learn More →</a>
+                            <button class="bg-primary text-white px-4 py-2 rounded-full hover:bg-primary-dark transition-colors">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Featured Event 3 -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative h-64">
+                        <img src="images/Diwali Festival.jpg" alt="Diwali Festival" class="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 hover:scale-110">
+                        <div class="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md">
+                            Nov 12, 2025
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                            <h3 class="text-2xl font-bold text-white">Diwali Festival</h3>
+                            <p class="text-white/90">The festival of lights with sustainable celebrations</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">Nationwide</span>
+                            <span class="text-sm text-primary font-medium">Featured</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Experience the magic of Diwali with eco-friendly lighting and sustainable celebrations across India.</p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-primary font-medium hover:underline">Learn More →</a>
+                            <button class="bg-primary text-white px-4 py-2 rounded-full hover:bg-primary-dark transition-colors">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-16">
+                <a href="#calendar" class="inline-block bg-white hover:bg-gray-50 text-primary font-medium px-8 py-4 rounded-full transition-all transform hover:scale-105 shadow-lg hover:shadow-xl" data-aos="fade-up">View All Events</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern Festival Categories -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-display font-bold mb-4 text-center" data-aos="fade-up">Festival Categories</h2>
+            <p class="text-xl text-center mb-16 text-gray-600" data-aos="fade-up">Explore different types of celebrations across India</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Category 1 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow cursor-pointer category-filter" data-category="religious" data-aos="fade-up">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-pray text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Religious Festivals</h3>
+                    <p class="text-gray-600">Experience spiritual celebrations and traditional rituals</p>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow cursor-pointer category-filter" data-category="arts" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-music text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Music & Arts</h3>
+                    <p class="text-gray-600">Contemporary and classical cultural performances</p>
+                </div>
+                
+                <!-- Category 3 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow cursor-pointer category-filter" data-category="harvest" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-leaf text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Harvest Festivals</h3>
+                    <p class="text-gray-600">Celebrate agricultural traditions and sustainable practices</p>
+                </div>
+                
+                <!-- Category 4 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-2xl transition-shadow cursor-pointer category-filter" data-category="media" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-film text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Film & Media</h3>
+                    <p class="text-gray-600">Modern entertainment and digital art festivals</p>
+                </div>
+            </div>
+            
+            <!-- Category-Specific Event List (Initially Hidden) -->
+            <div id="category-event-list-container" class="mt-12 hidden bg-white p-6 rounded-xl shadow-lg">
+                <h4 id="category-list-title" class="text-2xl font-bold mb-4 text-primary">Events in Category</h4>
+                <div id="category-event-list" class="space-y-2"></div>
+                <p id="no-category-events-message" class="text-gray-500 hidden">No events found in this category.</p>
+            </div>
+            
+            <!-- Clear Filter Button (Initially Hidden) -->
+            <div class="text-center mt-10 hidden" id="clear-filter-container">
+                <button id="clear-filter" class="bg-white hover:bg-gray-50 text-primary font-medium px-6 py-3 rounded-full transition-all transform hover:scale-105 shadow-md">
+                    <i class="fas fa-times-circle mr-2"></i>Clear Filter
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern Travel Tips -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-display font-bold mb-12 text-center" data-aos="fade-up">Smart Travel Tips</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition-shadow" data-aos="fade-up">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-mobile-alt text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-black">Digital Tools</h3>
+                    <p class="text-black">Use festival apps for tickets, maps, and real-time updates. Download before travel for offline access.</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-leaf text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-black">Eco-Friendly</h3>
+                    <p class="text-black">Choose sustainable travel options and support local eco-initiatives. Minimize waste during festivals.</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-black">Safety First</h3>
+                    <p class="text-black">Follow health guidelines and stay updated on local protocols. Keep emergency contacts saved in your phone.</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-heart text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-black">Cultural Respect</h3>
+                    <p class="text-black">Learn about local customs and traditions before visiting. Dress appropriately for religious festivals.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16">
+                <a href="planner.html" class="inline-block bg-primary hover:bg-primary-dark text-dark font-bold text-black px-10 py-4 rounded-full transition-all transform hover:scale-105 shadow-md" data-aos="fade-up">
+                    Plan Your Festival Trip
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern Footer -->
+    <footer class="bg-dark text-white pt-20 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">ExploreIndia</h3>
+                    <p class="text-gray-400 mb-8">Your ultimate guide to experiencing India. Discover destinations, plan your trip, and create unforgettable memories.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Quick Links</h3>
+                    <ul class="space-y-4">
+                        <li><a href="destinations.html" class="text-gray-400 hover:text-white transition-colors">Destinations</a></li>
+                        <li><a href="experiences.html" class="text-gray-400 hover:text-white transition-colors">Experiences</a></li>
+                        <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
+                        <li><a href="planner.html" class="text-gray-400 hover:text-white transition-colors">Trip Planner</a></li>
+                        <li><a href="stories.html" class="text-gray-400 hover:text-white transition-colors">Traveler Stories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Resources</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Travel Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Visa Information</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Weather Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Safety Guidelines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">COVID-19 Updates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-6">Contact Us</h3>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3"></i>
+                            <span>123 Tourism Street, New Delhi, India</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3"></i>
+                            <span>info@exploreindia.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 mb-4 md:mb-0">&copy; 2025 ExploreIndia. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" class="text-gray-500 hover:text-white transition-colors">Accessibility</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Event Details Modal -->
+    <div id="event-details-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-75 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative mx-4 my-8 transform transition-transform duration-300 scale-95 opacity-0" id="modal-content">
+            <!-- Close Button -->
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 z-10">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <!-- Navigation Buttons -->
+            <button id="prev-event-btn" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary w-10 h-10 rounded-full flex items-center justify-center shadow-lg z-10 transition-all hover:scale-105">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button id="next-event-btn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary w-10 h-10 rounded-full flex items-center justify-center shadow-lg z-10 transition-all hover:scale-105">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <!-- Modal Content -->
+            <img id="modal-img" src="" alt="Event Image" class="w-full h-64 object-cover rounded-t-xl">
+            <div class="p-6 md:p-8">
+                <h3 id="modal-title" class="text-2xl md:text-3xl font-bold font-display mb-3">Event Title</h3>
+                <p id="modal-date" class="text-md text-primary font-semibold mb-4">Event Date</p>
+                <p id="modal-description" class="text-gray-700 text-base leading-relaxed mb-4">Event description goes here...</p>
+                
+                <!-- Significance/History Sections -->
+                <div class="mt-6 pt-4 border-t border-gray-200">
+                    <h4 class="text-lg font-semibold mb-2 text-gray-800">Significance</h4>
+                    <p id="modal-significance" class="text-gray-600 text-sm leading-relaxed">Why this event is celebrated...</p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <h4 class="text-lg font-semibold mb-2 text-gray-800">Historical Importance</h4>
+                    <p id="modal-history" class="text-gray-600 text-sm leading-relaxed">Historical background of the event...</p>
+                </div>
+                
+                <!-- Added Video/Website Sections (Hidden by default) -->
+                <div id="modal-video-section" class="mt-4 pt-4 border-t border-gray-200 hidden">
+                    <h4 class="text-lg font-semibold mb-3 text-gray-800">Watch Highlights</h4>
+                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                        <iframe id="modal-video-iframe" class="w-full h-full" src="" title="Event Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div id="modal-website-section" class="mt-4 pt-4 border-t border-gray-200 hidden">
+                    <h4 class="text-lg font-semibold mb-2 text-gray-800">More Information</h4>
+                    <a id="modal-website-link" href="#" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline font-medium inline-flex items-center">
+                        Visit Official Website <i class="fas fa-external-link-alt ml-2 text-xs"></i>
+                    </a>
+                </div>
+                
+                <!-- Navigation Indicator -->
+                <div class="flex justify-center items-center mt-6 pt-4 border-t border-gray-200">
+                    <div id="event-navigation-indicator" class="flex space-x-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/translation-engine-new.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Initialize the translation engine
+        document.addEventListener('DOMContentLoaded', () => {
+            window.translationEngine = new CulturalTranslationEngine();
+            window.translationEngine.init();
+        });
+    </script>
+    <!-- Chat Feature -->
+    <script src="js/chat.js"></script>
+
+    <!-- Chatbot Button -->
+    <button type="button" id="chat-toggle-button" class="fixed bottom-5 right-5 bg-primary hover:bg-opacity-90 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-30 transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        <i class="fas fa-comments text-2xl"></i>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="chat-window" class="hidden fixed bottom-20 right-5 w-full max-w-sm sm:w-80 h-[65vh] sm:h-96 bg-white rounded-lg shadow-xl z-40 flex flex-col overflow-hidden border border-gray-200">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-primary to-blue-600 text-white p-3 flex justify-between items-center shadow-sm">
+             <div class="flex items-center gap-2">
+                 <!-- Icon background white, icon color blue-800 -->
+                 <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white text-blue-800 shadow-inner">
+                    <i class="fas fa-robot text-base"></i> 
+                 </span>
+                 <h3 class="font-semibold text-base">Travel Assistant</h3>
+             </div>
+            <button id="chat-close-button" class="text-white hover:text-gray-200 focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <!-- Messages -->
+        <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50">
+            <!-- Messages will be added here -->
+             <div class="chat-bubble bot"><p>Welcome! How can I help you plan your India trip today?</p></div>
+        </div>
+        <!-- Input -->
+        <div class="p-3 border-t border-gray-200 bg-white">
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="Ask anything..." class="flex-grow px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary shadow-sm">
+                <button type="submit" class="bg-primary hover:bg-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary shadow-sm transition-colors">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 

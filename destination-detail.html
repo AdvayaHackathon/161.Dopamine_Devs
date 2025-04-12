@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destination Detail - DeshaAnubhava</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/weather-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-50">
+    <!-- Header with Back Button -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center">
+                <a href="destinations.html" class="flex items-center text-gray-600 hover:text-primary transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span>Back to Destinations</span>
+                </a>
+                <a href="index.html" class="ml-auto text-xl font-display font-bold text-primary">
+                    Desha<span class="text-secondary">Anubhava</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <div id="destination-content" class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Hero Image -->
+            <div class="h-80 md:h-96 bg-gray-200 relative">
+                <div id="destination-image" class="w-full h-full bg-center bg-cover"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6">
+                    <h1 id="destination-name" class="text-4xl md:text-5xl font-display font-bold mb-2 text-white"></h1>
+                    <div class="flex items-center text-white/90 text-sm">
+                        <i class="fas fa-map-marker-alt mr-1.5"></i>
+                        <span id="destination-location"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6">
+                <!-- Weather Info -->
+                <div id="weather-info" class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 flex items-center gap-4 shadow-sm">
+                    <i class="fas fa-spinner fa-spin text-lg"></i> 
+                    <span>Loading current weather...</span>
+                </div>
+
+                <!-- Tags -->
+                <div id="destination-tags" class="mb-6"></div>
+
+                <!-- Overview -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Overview</h2>
+                    <p id="destination-description" class="text-gray-600 leading-relaxed"></p>
+                </section>
+
+                <!-- Best Time to Visit -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Best Time to Visit</h2>
+                    <div id="best-time" class="bg-gray-100 p-4 rounded-lg text-gray-700"></div>
+                </section>
+
+                <!-- Highlights -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Highlights</h2>
+                    <div id="highlights" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </section>
+
+                <!-- Map -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Location</h2>
+                    <div id="map" class="h-80 bg-gray-200 rounded-lg"></div>
+                </section>
+
+                <!-- Nearby Attractions -->
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Nearby Attractions</h2>
+                    <div id="nearby" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold mb-4">DeshaAnubhava</h3>
+                    <p class="text-gray-400 max-w-md">Your ultimate guide to exploring the diverse beauty and rich culture of India.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="destinations.html" class="text-gray-400 hover:text-white transition-colors">Destinations</a></li>
+                        <li><a href="experiences.html" class="text-gray-400 hover:text-white transition-colors">Experiences</a></li>
+                        <li><a href="events.html" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-sm text-gray-400">
+                <p>&copy; 2025 DeshaAnubhava. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get destination ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const destinationId = urlParams.get('id') || urlParams.get('dest');
+            
+            // Exit if no destination ID
+            if (!destinationId) {
+                document.getElementById('destination-content').innerHTML = `
+                    <div class="p-6 text-center">
+                        <h2 class="text-2xl font-bold text-red-500 mb-4">Destination Not Found</h2>
+                        <p class="mb-4">We couldn't find the destination you're looking for.</p>
+                        <a href="destinations.html" class="inline-block bg-primary text-white font-medium px-6 py-2 rounded-lg">
+                            Browse All Destinations
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Access destination data
+            let destination;
+            if (window.destinationData && window.destinationData[destinationId]) {
+                destination = window.destinationData[destinationId];
+            } else {
+                // Fetch destination data if not available globally
+                fetch('js/destinations.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data[destinationId]) {
+                            renderDestination(data[destinationId]);
+                        } else {
+                            showNotFound();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading destination data:', error);
+                        showNotFound();
+                    });
+                return;
+            }
+            
+            renderDestination(destination);
+            
+            function renderDestination(destination) {
+                // Set page title
+                document.title = `${destination.name} - DeshaAnubhava`;
+                
+                // Basic destination info
+                document.getElementById('destination-name').textContent = destination.name;
+                document.getElementById('destination-location').textContent = destination.location || 'India';
+                document.getElementById('destination-description').textContent = destination.description || 'No description available.';
+                
+                // Set background image
+                const imageUrl = destination.image || `images/${destinationId.toLowerCase()}.jpg`;
+                document.getElementById('destination-image').style.backgroundImage = `url('${imageUrl}')`;
+                
+                // Render tags
+                if (destination.tags && destination.tags.length) {
+                    document.getElementById('destination-tags').innerHTML = destination.tags
+                        .map(tag => `<span class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">${tag}</span>`)
+                        .join('');
+                }
+                
+                // Best time to visit
+                document.getElementById('best-time').textContent = destination.bestTime || 'All year round';
+                
+                // Highlights
+                if (destination.highlights && destination.highlights.length) {
+                    document.getElementById('highlights').innerHTML = destination.highlights
+                        .map(highlight => `
+                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                                <h3 class="font-bold mb-2">${highlight.title || 'Highlight'}</h3>
+                                <p class="text-gray-600 text-sm">${highlight.description || ''}</p>
+                            </div>
+                        `)
+                        .join('');
+                } else {
+                    document.getElementById('highlights').innerHTML = '<p class="text-gray-500">No highlights available.</p>';
+                }
+                
+                // Initialize map if coordinates available
+                if (destination.coordinates) {
+                    initMap(destination.coordinates[0], destination.coordinates[1], destination.name);
+                } else {
+                    document.getElementById('map').innerHTML = '<p class="flex items-center justify-center h-full text-gray-500">Map location not available</p>';
+                }
+                
+                // Nearby attractions
+                if (destination.nearby && destination.nearby.length) {
+                    document.getElementById('nearby').innerHTML = destination.nearby
+                        .map(place => `
+                            <div class="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+                                <div class="h-40 bg-gray-200">
+                                    ${place.image ? `<img src="${place.image}" alt="${place.name}" class="w-full h-full object-cover">` : ''}
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="font-bold mb-1">${place.name}</h3>
+                                    <p class="text-gray-600 text-sm">${place.description || ''}</p>
+                                </div>
+                            </div>
+                        `)
+                        .join('');
+                } else {
+                    document.getElementById('nearby').innerHTML = '<p class="text-gray-500">No nearby attractions information available.</p>';
+                }
+                
+                // Weather info
+                fetchWeather(destination);
+            }
+            
+            function showNotFound() {
+                document.getElementById('destination-content').innerHTML = `
+                    <div class="p-6 text-center">
+                        <h2 class="text-2xl font-bold text-red-500 mb-4">Destination Not Found</h2>
+                        <p class="mb-4">We couldn't find the destination you're looking for.</p>
+                        <a href="destinations.html" class="inline-block bg-primary text-white font-medium px-6 py-2 rounded-lg">
+                            Browse All Destinations
+                        </a>
+                    </div>
+                `;
+            }
+            
+            function initMap(lat, lng, title) {
+                const map = L.map('map').setView([lat, lng], 10);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup(title)
+                    .openPopup();
+            }
+            
+            function fetchWeather(destination) {
+                const weatherInfo = document.getElementById('weather-info');
+                
+                if (!destination.coordinates) {
+                    weatherInfo.innerHTML = '<div class="flex items-center"><i class="fas fa-info-circle text-blue-500 mr-3 text-xl"></i><span>Weather information not available for this location.</span></div>';
+                    return;
+                }
+                
+                const [lat, lng] = destination.coordinates;
+                
+                // Simulate weather data fetching (in a real app, you'd call a weather API)
+                setTimeout(() => {
+                    const weatherData = getRandomWeather();
+                    weatherInfo.innerHTML = `
+                        <div class="flex items-center justify-between w-full">
+                            <div class="flex items-center">
+                                <i class="${getWeatherIcon(weatherData.condition)} text-2xl mr-3 text-blue-500"></i>
+                                <div>
+                                    <div class="font-medium">${weatherData.condition}</div>
+                                    <div class="text-xs text-blue-600">Last updated: ${new Date().toLocaleString()}</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-lg">${weatherData.temperature}°C</div>
+                                <div class="text-xs">Humidity: ${weatherData.humidity}%</div>
+                            </div>
+                        </div>
+                    `;
+                }, 1500);
+            }
+            
+            function getRandomWeather() {
+                const conditions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Rain', 'Thunderstorm', 'Clear'];
+                const condition = conditions[Math.floor(Math.random() * conditions.length)];
+                return {
+                    temperature: Math.floor(Math.random() * 15) + 20, // 20-35°C
+                    humidity: Math.floor(Math.random() * 30) + 50, // 50-80%
+                    condition
+                };
+            }
+            
+            function getWeatherIcon(condition) {
+                switch(condition.toLowerCase()) {
+                    case 'sunny': return 'fas fa-sun';
+                    case 'partly cloudy': return 'fas fa-cloud-sun';
+                    case 'cloudy': return 'fas fa-cloud';
+                    case 'rain': return 'fas fa-cloud-rain';
+                    case 'thunderstorm': return 'fas fa-bolt';
+                    case 'clear': return 'fas fa-moon';
+                    default: return 'fas fa-cloud';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
